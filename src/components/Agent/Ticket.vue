@@ -35,11 +35,10 @@
 </style>
 <script>
 export default {
-  beforeCreate() {
-    this.form = this.$form.createForm(this);
-  },
+
   data() {
     return {
+      form: this.$form.createForm(this),
       ticketNo: "1598745632",
       ticket: {
           date: '',

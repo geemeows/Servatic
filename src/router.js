@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboard from './components/Moderator/Dashboard.vue'
-import AddAgents from './components/Moderator/AddAgents.vue'
-import AgentChat from './components/Agent/AgentChat.vue'
+import Dashboard from './views/Moderator/Dashboard.vue'
+import AgentsList from './views/Moderator/AgentsList.vue'
+import AgentChat from './views/Agent/AgentChat.vue'
 
 Vue.use(Router)
 
@@ -21,14 +21,14 @@ export default new Router({
       component: Dashboard
     },
     {
-      path: '/add-agents',
+      path: '/agents-list',
       name: 'addAgents',
-      component: AddAgents
+      component: AgentsList
     },
     {
       path: '/agent-chat',
       name: 'agentChat',
       component: AgentChat
-    },
+    }
   ]
 })

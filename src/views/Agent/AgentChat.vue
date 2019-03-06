@@ -80,8 +80,8 @@
 </style>
 
 <script>
-import clientTicket from "./Ticket";
-import chatWindow from "../Chat/Chat"
+import clientTicket from "../../components/Agent/Ticket";
+import chatWindow from "../../components/Chat/Chat"
 export default {
   components: {
     clientTicket,

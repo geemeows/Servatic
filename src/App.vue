@@ -16,9 +16,9 @@
         </a-menu-item>
 
         <a-menu-item key="2">
-          <router-link to="/add-agents">
-            <a-icon type="user-add"/>
-            <span>Add Agents</span>
+          <router-link to="/agents-list">
+            <a-icon type="team"/>
+            <span>Agents List</span>
           </router-link>
         </a-menu-item>
 
@@ -71,11 +71,19 @@
 </template>
 <script>
 export default {
+  created() {
+    if(this.$route.fullPath == '/' || this.$route.fullPath == '/dashboard')
+      this.menuActive = '1'
+    if(this.$route.fullPath == '/agents-list')
+      this.menuActive = '2'
+    if(this.$route.fullPath == '/agent-chat')
+      this.menuActive = '3'
+  },
   data() {
     return {
       collapsed: false,
       imgSrc: require("../src/assets/Servatic.Logo.png"),
-      menuActive: '1'
+      menuActive: null
     };
   },
   methods: {
