@@ -18,13 +18,10 @@
         placement="left"
         :wrapStyle="{height: 'calc(100% - 108px)',overflow: 'auto',paddingBottom: '108px'}"
       >
-        <add-agent @closeDrawer="onClose"></add-agent>
+        <add-agent @closeDrawer="onClose" @agentData="addNewAgent"></add-agent>
       </a-drawer>
 
       <a-table bordered :dataSource="dataSource" :columns="columns">
-        <template slot="name" slot-scope="text, record">
-          <editable-cell :text="text" @change="onCellChange(record.key, 'name')"/>
-        </template>
         <template slot="delete" slot-scope="text, record">
           <a-popconfirm
             v-if="dataSource.length"
@@ -39,30 +36,16 @@
   </a-layout-content>
 </template>
 <script>
-import EditableCell from "../../components/EditableCell";
 import addAgent from "../../components/Moderator/AddAgent"
 export default {
   components: {
-    EditableCell,
     addAgent
   },
   data() {
     return {
       visible: false,
-      dataSource: [
-        {
-          key: "0",
-          name: "Edward King 0",
-          username: "32",
-          email: "London, Park Lane no. 0"
-        },
-        {
-          key: "1",
-          name: "Edward King 1",
-          username: "32",
-          email: "London, Park Lane no. 1"
-        }
-      ],
+      key: 0,
+      dataSource: [],
       columns: [
         {
           title: "Name",
@@ -87,16 +70,6 @@ export default {
     };
   },
   methods: {
-    onCellChange(key, dataIndex) {
-      return value => {
-        const dataSource = [...this.dataSource];
-        const target = dataSource.find(item => item.key === key);
-        if (target) {
-          target[dataIndex] = value;
-          this.dataSource = dataSource;
-        }
-      };
-    },
     onDelete(key) {
       const dataSource = [...this.dataSource];
       this.dataSource = dataSource.filter(item => item.key !== key);
@@ -106,6 +79,19 @@ export default {
     },
     onClose() {
       this.visible = false;
+    },
+    addNewAgent(payload) {
+      let newAgent = {
+        key: this.key,
+        name: '',
+        username: '',
+        email: ''
+      }
+      newAgent.name = payload.name
+      newAgent.username = payload.username
+      newAgent.email = payload.email
+      this.dataSource.push(newAgent)
+      this.key++
     }
   }
 };
@@ -118,7 +104,7 @@ export default {
 .ant-form-item {
   margin-bottom: 5px;
 }
-.editable-cell {
+/* .editable-cell {
   position: relative;
 }
 
@@ -159,5 +145,5 @@ export default {
 
 .editable-add-btn {
   margin-bottom: 8px;
-}
+} */
 </style>

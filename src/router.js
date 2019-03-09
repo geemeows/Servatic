@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from './views/Moderator/Dashboard.vue'
 import AgentsList from './views/Moderator/AgentsList.vue'
 import AgentChat from './views/Agent/AgentChat.vue'
+import ErrorPage from './views/ErrorPage.vue'
 
 Vue.use(Router)
 
@@ -29,6 +30,12 @@ export default new Router({
       path: '/agent-chat',
       name: 'agentChat',
       component: AgentChat
+    },
+    {
+      path: '*',
+      name: 'error',
+      component: ErrorPage
     }
+    
   ]
 })

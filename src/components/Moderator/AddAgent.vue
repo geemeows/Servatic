@@ -81,6 +81,7 @@ export default {
           this.agentData.password = values.agentPassword
           
           this.$emit('closeDrawer', true)
+          this.$emit('agentData', this.agentData)
           this.$message.success('Registeration Completed');
           this.form.resetFields()
         }

@@ -67,11 +67,9 @@ export default {
       }, 0);
     });
   },
-  beforeCreate() {
-    this.form = this.$form.createForm(this);
-  },
   data() {
     return {
+      form: this.$form.createForm(this),
       message: "",
       time: "10:30 PM",
       sentMessagesArray: []

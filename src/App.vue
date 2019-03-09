@@ -2,10 +2,10 @@
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider :trigger="null" collapsible v-model="collapsed">
       <div class="logo">
-        <img
-          :src="imgSrc"
-          :style="[collapsed? {'width': '40px', 'margin': '-2px 5px'} : {'width': '100px', 'margin': '0 30px'}]"
-        >
+          <img
+            :src="imgSrc"
+            :style="[collapsed? {'width': '60px', 'margin': '-2px -5px'} : {'width': '150px', 'margin': '0 5px'}]"
+          >
       </div>
       <a-menu theme="dark" mode="inline" :defaultSelectedKeys="[menuActive]">
         <a-menu-item key="1">
@@ -42,42 +42,41 @@
         />Vodafone
         <a-dropdown>
           <a class="ant-dropdown-link">
-            <a-avatar icon="user" size="small"/> Gazouly
+            <a-avatar icon="user" size="small"/>&nbsp;Gazouly
           </a>
           <a-menu slot="overlay" style="margin-right: 15px;">
             <a-menu-item>
               <a href="#">
-                <a-icon type="setting"/> Settings
+                <a-icon type="setting"/>&nbsp;Settings
               </a>
             </a-menu-item>
             <a-menu-item>
               <a href="#">
-                <a-icon type="dollar"/> Billing Info.
+                <a-icon type="dollar"/>&nbsp;Billing Info.
               </a>
             </a-menu-item>
             <a-divider style="padding: 0; margin: 0"/>
             <a-menu-item>
               <a href="#">
-                <a-icon type="logout"/> Logout
+                <a-icon type="logout"/>&nbsp;Logout
               </a>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
       </a-layout-header>
-        <router-view />
+      <router-view/>
       <!-- <a-layout-footer style="textAlign: center">&copy; 2019 Servatic | All Rights Reserved</a-layout-footer> -->
     </a-layout>
   </a-layout>
 </template>
+
 <script>
 export default {
   created() {
-    if(this.$route.fullPath == '/' || this.$route.fullPath == '/dashboard')
-      this.menuActive = '1'
-    if(this.$route.fullPath == '/agents-list')
-      this.menuActive = '2'
-    if(this.$route.fullPath == '/agent-chat')
-      this.menuActive = '3'
+    if (this.$route.fullPath == "/" || this.$route.fullPath == "/dashboard")
+      this.menuActive = "1";
+    if (this.$route.fullPath == "/agents-list") this.menuActive = "2";
+    if (this.$route.fullPath == "/agent-chat") this.menuActive = "3";
   },
   data() {
     return {
@@ -91,9 +90,7 @@ export default {
       this.collapsed = !this.collapsed;
       if (this.collapsed)
         this.imgSrc = require("../src/assets/Servatic.Logo_1.png");
-      else 
-        this.imgSrc = require("../src/assets/Servatic.Logo.png");
-
+      else this.imgSrc = require("../src/assets/Servatic.Logo.png");
     }
   }
 };
@@ -113,8 +110,6 @@ export default {
 }
 
 #components-layout-demo-custom-trigger .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
   margin: 16px;
 }
 .ant-dropdown-link.ant-dropdown-trigger {
@@ -123,18 +118,17 @@ export default {
   font-size: 14px;
   color: #000;
 }
-.logo img {
-  width: 100px;
-  margin: 0 30px;
-}
 .ant-card-body {
   padding-bottom: 10px !important;
 }
 .ant-card-head {
-      color: white !important;
-    background: #001529 !important;
+  color: white !important;
+  background: #001529 !important;
 }
 .chat-window .ant-card-body {
   padding-top: 0 !important;
+}
+.ant-layout-header {
+  border-bottom: 1px solid #ebebeb !important;
 }
 </style>
