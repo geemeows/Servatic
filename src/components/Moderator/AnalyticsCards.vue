@@ -37,7 +37,7 @@
               </a-col>
               <a-col :span="14">
                 <div class="card-info">
-                  <span class="title">#Clients in queue</span>
+                  <span class="title">#Clients in Queue</span>
                   <span class="value">67</span>
                 </div>
               </a-col>
