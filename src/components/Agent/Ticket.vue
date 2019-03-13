@@ -2,23 +2,33 @@
   <a-card :title="'Ticket No. #' + ticketNo">
     <a-form class="ticket-form" :form="form">
       <a-form-item>
-        <a-date-picker style="width: 100% !important;" @change="onChange"/>
+        <a-date-picker 
+        v-decorator="['complaintDate', {rules: [{ required: true, message: 'Please, enter the date of the complaint!' }]}]" 
+        style="width: 100% !important;" @change="onChange"/>
       </a-form-item>
       <a-form-item>
-        <a-input placeholder="Complaint" v-model="ticket.complaint">
+        <a-input 
+        v-decorator="['complaint', {rules: [{ required: true, message: 'Please, enter the complaint title!' }]}]" 
+        placeholder="Complaint">
           <a-icon slot="prefix" type="info-circle" style="color: rgba(0,0,0,.25)"/>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-input placeholder="Action" v-model="ticket.action">
+        <a-input 
+        v-decorator="['action', {rules: [{ required: true, message: 'Please, enter the action taken for this the complaint!' }]}]" 
+        placeholder="Action">
           <a-icon slot="prefix" type="form" style="color: rgba(0,0,0,.25)"/>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-textarea placeholder="Complaint Summary" :rows="5" v-model="ticket.summary"/>
+        <a-textarea 
+        v-decorator="['complaintSummary', {rules: [{ required: true, message: 'Please, enter the summary of the complaint!' }]}]" 
+        placeholder="Complaint Summary" :rows="5"/>
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" html-type="submit" class="login-form-button" block @click="submitComplaint">Submit Complaint</a-button>
+        <a-popconfirm placement="rightBottom" title="Chat with another client?" @confirm="confirm" @cancel="cancel" okText="Yes" cancelText="No">
+          <a-button type="primary" html-type="submit" class="login-form-button" block>Submit Complaint</a-button>
+        </a-popconfirm>
       </a-form-item>
     </a-form>
   </a-card>
@@ -50,11 +60,31 @@ export default {
   },
   methods: {
     submitComplaint() {
-      this.$emit('receiveTicketData', this.ticket)
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          this.ticket.complaint = values.complaint
+          this.ticket.action = values.action
+          this.ticket.summary = values.complaintSummary
+          console.log(this.ticket)
+
+          this.$message.success('Complaint submitted successfully!') // Success Message
+          this.$emit('receiveTicketData', this.ticket) // Sending out the information of the ticket
+          
+          // Clearing the fields 
+          this.form.resetFields();
+        }
+      });
     },
     onChange(date, dateString) {
       this.ticket.date = dateString
-    }
+    },
+    confirm (e) {
+      this.submitComplaint()
+      // Implement the feature of fetching next client here
+    },
+    cancel (e) {
+      this.submitComplaint()
+    },
   }
 };
 </script>
