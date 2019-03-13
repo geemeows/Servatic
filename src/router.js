@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from './views/Moderator/Dashboard.vue'
 import AgentsList from './views/Moderator/AgentsList.vue'
 import AgentChat from './views/Agent/AgentChat.vue'
+import ClosedTickets from './views/Mutual/ClosedTicketsView.vue'
 import ErrorPage from './views/ErrorPage.vue'
 // import MainPage from './views/MainPage'
 
@@ -35,6 +36,11 @@ export default new Router({
       name: 'agentChat',
       meta: { title: 'Agent Chat' },
       component: AgentChat
+    },
+    {
+      path: '/closed-tickets',
+      name: 'closedTickets',
+      component: ClosedTickets
     },
     {
       path: '*',

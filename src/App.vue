@@ -28,6 +28,12 @@
             <span>Start Chatting</span>
           </router-link>
         </a-menu-item>
+        <a-menu-item key="4">
+          <router-link to="/closed-tickets">
+            <a-icon type="file-done" />
+            <span>Closed Tickets</span>
+          </router-link>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
 
@@ -77,6 +83,7 @@ export default {
       this.menuActive = "1";
     if (this.$route.fullPath == "/agents-list") this.menuActive = "2";
     if (this.$route.fullPath == "/agent-chat") this.menuActive = "3";
+    if (this.$route.fullPath == "/closed-tickets") this.menuActive = "4";
   },
   data() {
     return {
