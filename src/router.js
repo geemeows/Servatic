@@ -5,7 +5,9 @@ import AgentsList from './views/Moderator/AgentsList.vue'
 import AgentChat from './views/Agent/AgentChat.vue'
 import ClosedTickets from './views/Mutual/ClosedTicketsView.vue'
 import ErrorPage from './views/ErrorPage.vue'
-// import MainPage from './views/MainPage'
+import Sidebar from './components/Mutual/Sidebar.vue'
+import Navbar from './components/Mutual/Navbar.vue'
+import Login from './views/Login.vue'
 
 Vue.use(Router)
 
@@ -14,39 +16,58 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '',
+      redirect: '/login'
+    },
+    {
       path: '/dashboard',
       name: 'dashboard',
       meta: { title: 'Dashboard' },
-      component: Dashboard
-    },
-    {
-      path: '/',
-      name: 'dashboard',
-      meta: { title: 'Dashboard' },
-      component: Dashboard
+      components: {
+        default: Dashboard,
+        'sidebar': Sidebar,
+        'navbar': Navbar
+      }
     },
     {
       path: '/agents-list',
       name: 'agentsList',
       meta: { title: 'Agents List' },
-      component: AgentsList
+      components: {
+        default: AgentsList,
+        'sidebar': Sidebar,
+        'navbar': Navbar
+      }
     },
     {
       path: '/agent-chat',
       name: 'agentChat',
       meta: { title: 'Agent Chat' },
-      component: AgentChat
+      components: {
+        default: AgentChat,
+        'sidebar': Sidebar,
+        'navbar': Navbar
+      }
     },
     {
       path: '/closed-tickets',
       name: 'closedTickets',
-      component: ClosedTickets
+      components: {
+        default: ClosedTickets,
+        'sidebar': Sidebar,
+        'navbar': Navbar
+      } 
     },
     {
       path: '*',
       name: 'error',
       meta: { title: '404 - Page Not Found' },
       component: ErrorPage
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     }
   ]
 })

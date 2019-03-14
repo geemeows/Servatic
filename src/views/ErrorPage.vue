@@ -1,7 +1,7 @@
 <template>
-  <a-layout-content :style="{'height': '90.47vh' }">
+  <a-layout-content :style="{'height': '100vh' }">
     <a-layout-content
-      :style="{padding: '70px', background: '#fff', boxShadow: '0 2px 5px rgba(0,21,41,.13)', 'height': '90.47vh'}"
+      :style="{padding: '70px', background: '#fff', boxShadow: '0 2px 5px rgba(0,21,41,.13)', 'height': '100vh'}"
     >
       <div class="error-page">
         <a-row>
