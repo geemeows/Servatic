@@ -1,5 +1,5 @@
 <template>
-  <a-card :title="'Ticket No. #' + ticketNo">
+  <a-card :title="'Ticket No. #' + '123456'">
     <a-form class="ticket-form" :form="form">
       <a-form-item>
         <a-date-picker 
