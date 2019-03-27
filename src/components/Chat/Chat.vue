@@ -18,6 +18,17 @@
       </scrolly>
     </div>
     <div class="chat-toolbox">
+      <div class="suggestions">
+        <div class="first" @click="message=firstAns">
+          {{firstAns}}
+        </div>
+        <div class="second" @click="message=secondAns">
+          {{secondAns}}
+        </div>
+        <div class="third" @click="message=thirdAns">
+          {{thirdAns}}
+        </div>
+      </div>
       <a-form :form="form" class="message-form" @submit.prevent>
         <a-row :gutter="16">
           <a-col :span="22">
@@ -72,7 +83,10 @@ export default {
       form: this.$form.createForm(this),
       message: "",
       time: "10:30 PM",
-      sentMessagesArray: []
+      sentMessagesArray: [],
+      firstAns: 'The First Ans',
+      secondAns: 'The Second Ans',
+      thirdAns: 'The Third Ans'
     };
   },
   methods: {
@@ -85,6 +99,7 @@ export default {
         });
       }
       this.message = "";
+      this.scrollTop();
     },
     scrollTop() {
       let scrollToBottom = this.$el.querySelector(".test");
@@ -100,7 +115,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 21, 41, 0.13);
 }
 .chat-box {
-  height: 337px;
+  height: 314px;
 }
 .chat-box::before {
   content: "";
@@ -168,5 +183,27 @@ export default {
   color: #9e9b9b;
   margin-left: 10px;
   font-size: 12px;
+}
+.suggestions {
+  padding-top: 5px;
+  margin-bottom: 20px;
+}
+.suggestions div {
+  padding: 2px 10px;
+  float: left;
+  width: 181px;
+  border: 1px solid #40A9FF;
+  margin-right: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  transition: background 0.3s ease-in-out;
+  position: relative;
+  word-wrap: break-word;
+  height: 100%;
+}
+.suggestions div:hover {
+  background: #40A9FF;
+  cursor: pointer !important;
+  color: white;
 }
 </style>
