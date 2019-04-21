@@ -8,10 +8,16 @@ import ErrorPage from './views/ErrorPage.vue'
 import Sidebar from './components/Mutual/Sidebar.vue'
 import Navbar from './components/Mutual/Navbar.vue'
 import Login from './views/Login.vue'
+import addCompany from './views/AdminPanel/AddCompany.vue'
+
+import store from '../src/store/store'
 
 Vue.use(Router)
+// const token = localStorage.getItem('token')
+// const expireDate = localStorage.getItem('expireDate')
+// const now = new Date()
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -25,8 +31,13 @@ export default new Router({
       meta: { title: 'Dashboard' },
       components: {
         default: Dashboard,
-        'sidebar': Sidebar,
-        'navbar': Navbar
+        sidebar: Sidebar,
+        navbar: Navbar
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('stillLoggedIn')
+        if (store.state.accessToken && store.state.accountType === 'moderator') next()
+        else next('/404')
       }
     },
     {
@@ -35,8 +46,13 @@ export default new Router({
       meta: { title: 'Agents List' },
       components: {
         default: AgentsList,
-        'sidebar': Sidebar,
-        'navbar': Navbar
+        sidebar: Sidebar,
+        navbar: Navbar
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('stillLoggedIn')
+        if (store.state.accessToken && store.state.accountType === 'moderator') next()
+        else next('/404')
       }
     },
     {
@@ -45,8 +61,13 @@ export default new Router({
       meta: { title: 'Agent Chat' },
       components: {
         default: AgentChat,
-        'sidebar': Sidebar,
-        'navbar': Navbar
+        sidebar: Sidebar,
+        navbar: Navbar
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('stillLoggedIn')
+        if (store.state.accessToken && (store.state.accountType === 'moderator' || store.state.accountType === 'agent')) next()
+        else next('/404')
       }
     },
     {
@@ -54,9 +75,28 @@ export default new Router({
       name: 'closedTickets',
       components: {
         default: ClosedTickets,
-        'sidebar': Sidebar,
-        'navbar': Navbar
-      } 
+        sidebar: Sidebar,
+        navbar: Navbar
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('stillLoggedIn')
+        if (store.state.accessToken && (store.state.accountType === 'moderator' || store.state.accountType === 'agent')) next()
+        else next('/404')
+      }
+    },
+    {
+      path: '/add-company',
+      name: 'addCompany',
+      components: {
+        default: addCompany,
+        sidebar: Sidebar,
+        navbar: Navbar
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('stillLoggedIn')
+        if (store.state.accessToken && store.state.accountType === 'admin') next()
+        else next('/404')
+      }
     },
     {
       path: '*',
@@ -68,6 +108,13 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+      // beforeEnter (to, from, next) {
+      //   store.dispatch('stillLoggedIn')
+      //   if (store.state.accessToken) return
+      //   else next(from.path)
+      // }
     }
   ]
 })
+
+export default router

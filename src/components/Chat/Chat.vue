@@ -19,15 +19,9 @@
     </div>
     <div class="chat-toolbox">
       <div class="suggestions">
-        <div class="first" @click="message=firstAns">
-          {{firstAns}}
-        </div>
-        <div class="second" @click="message=secondAns">
-          {{secondAns}}
-        </div>
-        <div class="third" @click="message=thirdAns">
-          {{thirdAns}}
-        </div>
+        <div class="first" @click="message=firstAns">{{firstAns}}</div>
+        <div class="second" @click="message=secondAns">{{secondAns}}</div>
+        <div class="third" @click="message=thirdAns">{{thirdAns}}</div>
       </div>
       <a-form :form="form" class="message-form" @submit.prevent>
         <a-row :gutter="16">
@@ -63,11 +57,39 @@
 
 <script>
 import { Scrolly, ScrollyViewport, ScrollyBar } from "vue-scrolly";
+import { ChatManager, TokenProvider } from "@pusher/chatkit-client";
+
+const chatManager = new ChatManager({
+  instanceLocator: "v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1",
+  userId: "Ahmed@gmail.com",
+  tokenProvider: new TokenProvider({
+    url:
+      "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token"
+  })
+});
+
 export default {
   components: {
     Scrolly,
     ScrollyViewport,
     ScrollyBar
+  },
+  created() {
+    chatManager
+      .connect({
+        onAddedToRoom: room => {
+          this.room = room;
+          this.listen
+          console.log(`Added to room ${room.name}`);
+        }
+      })
+      .then(currentUser => {
+        this.currUser = currentUser;
+        console.log("Successful connection", currentUser);
+      })
+      .catch(err => {
+        console.log("Error on connection", err);
+      });
   },
   mounted() {
     // This function makes the chat scrollbar scrolles down instantaneously
@@ -84,9 +106,11 @@ export default {
       message: "",
       time: "10:30 PM",
       sentMessagesArray: [],
-      firstAns: 'The First Ans',
-      secondAns: 'The Second Ans',
-      thirdAns: 'The Third Ans'
+      firstAns: "The First Ans",
+      secondAns: "The Second Ans",
+      thirdAns: "The Third Ans",
+      currUser: null,
+      room: null
     };
   },
   methods: {
@@ -98,12 +122,43 @@ export default {
           time: this.time
         });
       }
-      this.message = "";
+
       this.scrollTop();
+      this.currUser
+        .sendSimpleMessage({
+          roomId: this.room.id,
+          text: this.message
+        })
+        .then(messageId => {
+          console.log(`Added message to ${this.room.name}`);
+        })
+        .catch(err => {
+          console.log(`Error adding message to ${this.room.name}: ${err}`);
+        });
+        this.message = "";
     },
     scrollTop() {
       let scrollToBottom = this.$el.querySelector(".test");
       scrollToBottom.scrollTop = scrollToBottom.scrollHeight;
+    }
+  },
+  computed: {
+    listen() {
+      this.currUser.subscribeToRoomMultipart({
+        roomId: this.room.id,
+        hooks: {
+          onMessage: message => {
+            if(message.senderId != this.currUser.id)
+            this.sentMessagesArray.push({
+              type: "received",
+              message: message.parts[0].payload.content,
+              time: this.time
+            });
+            console.log("received message", message);
+          }
+        },
+        messageLimit: 0
+      });
     }
   }
 };
@@ -192,7 +247,7 @@ export default {
   padding: 2px 10px;
   float: left;
   width: 181px;
-  border: 1px solid #40A9FF;
+  border: 1px solid #40a9ff;
   margin-right: 5px;
   border-radius: 10px;
   font-size: 12px;
@@ -202,7 +257,7 @@ export default {
   height: 100%;
 }
 .suggestions div:hover {
-  background: #40A9FF;
+  background: #40a9ff;
   cursor: pointer !important;
   color: white;
 }

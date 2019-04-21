@@ -11,37 +11,39 @@
       <a-col :span="17" :offset="4">
         <a-card>
           <a-form class="ticket-form" :form="form" @submit="Signin">
-            <span
-              style="display: block; color: #bbb; font-style:italic; margin-bottom: 5px"
-            >**username and password are: admin</span>
-            <a-form-item>
-              <a-input
-                v-decorator="['username', {rules: [{ required: true, message: 'Please, enter a correct username' }]}]"
-                placeholder="Username"
-                size="large"
-              >
-                <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-input
-                v-decorator="['password', {rules: [{ required: true, message: 'Please, enter a correct password' }]}]"
-                placeholder="Password"
-                type="password"
-                size="large"
-              >
-                <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-button
-                type="primary"
-                html-type="submit"
-                style="margin-top: 10px;"
-                size="large"
-                block
-              >Sign In</a-button>
-            </a-form-item>
+            <a-spin tip="Loading..." :spinning="loadingIndicator">
+              <div class="spin-content">
+                <a-form-item>
+                  <a-input
+                    v-decorator="['email', {rules: [{ required: true, message: 'Please, enter a correct Email Address' }]}]"
+                    placeholder="Email Address"
+                    size="large"
+                    type="email"
+                  >
+                    <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
+                  </a-input>
+                </a-form-item>
+                <a-form-item>
+                  <a-input
+                    v-decorator="['password', {rules: [{ required: true, message: 'Please, enter a correct password' }]}]"
+                    placeholder="Password"
+                    type="password"
+                    size="large"
+                  >
+                    <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
+                  </a-input>
+                </a-form-item>
+                <a-form-item>
+                  <a-button
+                    type="primary"
+                    html-type="submit"
+                    style="margin-top: 10px;"
+                    size="large"
+                    block
+                  >Sign In</a-button>
+                </a-form-item>
+              </div>
+            </a-spin>
           </a-form>
         </a-card>
       </a-col>
@@ -52,22 +54,26 @@
 export default {
   data() {
     return {
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
     };
   },
   methods: {
     Signin(e) {
       e.preventDefault();
+
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (values.username == "admin" && values.password == "admin") {
-            this.$message.success("Successfully Signed in, Welcome Back");
-            this.$router.push("/dashboard");
-          } else {
-            this.$message.error("Invalid Username or Password");
-          }
+          this.$store.dispatch('login', {
+            email: values.email,
+            password: values.password
+          })
         }
       });
+    }
+  },
+  computed: {
+    loadingIndicator () {
+      return this.$store.getters.getLoadingIndicator
     }
   }
 };
