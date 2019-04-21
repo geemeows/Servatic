@@ -58,6 +58,7 @@
 <script>
 import { Scrolly, ScrollyViewport, ScrollyBar } from "vue-scrolly";
 import { ChatManager, TokenProvider } from "@pusher/chatkit-client";
+import axios from "../../axios-ML.js";
 
 const chatManager = new ChatManager({
   instanceLocator: "v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1",
@@ -79,7 +80,7 @@ export default {
       .connect({
         onAddedToRoom: room => {
           this.room = room;
-          this.listen
+          this.listen;
           console.log(`Added to room ${room.name}`);
         }
       })
@@ -135,7 +136,7 @@ export default {
         .catch(err => {
           console.log(`Error adding message to ${this.room.name}: ${err}`);
         });
-        this.message = "";
+      this.message = "";
     },
     scrollTop() {
       let scrollToBottom = this.$el.querySelector(".test");
@@ -148,12 +149,23 @@ export default {
         roomId: this.room.id,
         hooks: {
           onMessage: message => {
-            if(message.senderId != this.currUser.id)
-            this.sentMessagesArray.push({
-              type: "received",
-              message: message.parts[0].payload.content,
-              time: this.time
-            });
+            axios
+              .post(
+                "/gsug?query=" +
+                  message.parts[0].payload.content
+              )
+              .then(res => {
+                this.firstAns = res.data.suggestions[0];
+                this.secondAns = res.data.suggestions[1];
+                this.thirdAns = res.data.suggestions[2];
+                if (message.senderId != this.currUser.id)
+                  this.sentMessagesArray.push({
+                    type: "received",
+                    message: message.parts[0].payload.content,
+                    time: this.time
+                  });
+              })
+              .catch(err => console.log(err));
             console.log("received message", message);
           }
         },
