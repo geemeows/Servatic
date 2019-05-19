@@ -9,13 +9,10 @@ import Sidebar from './components/Mutual/Sidebar.vue'
 import Navbar from './components/Mutual/Navbar.vue'
 import Login from './views/Login.vue'
 import addCompany from './views/AdminPanel/AddCompany.vue'
-
-import store from '../src/store/store'
+import Cookies from 'vue-cookies'
 
 Vue.use(Router)
-// const token = localStorage.getItem('token')
-// const expireDate = localStorage.getItem('expireDate')
-// const now = new Date()
+let token, accountType
 
 const router = new Router({
   mode: 'history',
@@ -35,8 +32,9 @@ const router = new Router({
         navbar: Navbar
       },
       beforeEnter (to, from, next) {
-        store.dispatch('stillLoggedIn')
-        if (store.state.accessToken && store.state.accountType === 'moderator') next()
+        token = Cookies.get('token')
+        accountType = Cookies.get('accountType')
+        if (token && accountType === 'moderator') next()
         else next('/404')
       }
     },
@@ -50,8 +48,9 @@ const router = new Router({
         navbar: Navbar
       },
       beforeEnter (to, from, next) {
-        store.dispatch('stillLoggedIn')
-        if (store.state.accessToken && store.state.accountType === 'moderator') next()
+        token = Cookies.get('token')
+        accountType = Cookies.get('accountType')
+        if (token && accountType === 'moderator') next()
         else next('/404')
       }
     },
@@ -65,8 +64,9 @@ const router = new Router({
         navbar: Navbar
       },
       beforeEnter (to, from, next) {
-        store.dispatch('stillLoggedIn')
-        if (store.state.accessToken && (store.state.accountType === 'moderator' || store.state.accountType === 'agent')) next()
+        token = Cookies.get('token')
+        accountType = Cookies.get('accountType')
+        if (token && (accountType === 'moderator' || accountType === 'agent')) next()
         else next('/404')
       }
     },
@@ -79,8 +79,9 @@ const router = new Router({
         navbar: Navbar
       },
       beforeEnter (to, from, next) {
-        store.dispatch('stillLoggedIn')
-        if (store.state.accessToken && (store.state.accountType === 'moderator' || store.state.accountType === 'agent')) next()
+        token = Cookies.get('token')
+        accountType = Cookies.get('accountType')
+        if (token && (accountType === 'moderator' || accountType === 'agent')) next()
         else next('/404')
       }
     },
@@ -93,9 +94,10 @@ const router = new Router({
         navbar: Navbar
       },
       beforeEnter (to, from, next) {
-        store.dispatch('stillLoggedIn')
-        if (store.state.accessToken && store.state.accountType === 'admin') next()
-        else next('/404')
+        token = Cookies.get('token')
+        accountType = Cookies.get('accountType')
+        if (token && accountType === 'admin') next()
+        else next('/404') 
       }
     },
     {
@@ -108,11 +110,6 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
-      // beforeEnter (to, from, next) {
-      //   store.dispatch('stillLoggedIn')
-      //   if (store.state.accessToken) return
-      //   else next(from.path)
-      // }
     }
   ]
 })

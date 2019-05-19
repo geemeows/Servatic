@@ -5,7 +5,7 @@
         <scrolly-viewport class="test">
           <div class="chat-messages">
             <!-- sent / received are the classes of the sent and received messages -->
-            <div v-for="message in sentMessagesArray">
+            <div v-for="message in sentMessagesArray" :key="message">
               <div :class="message.type">
                 <div class="content">{{message.message}}</div>
                 <div class="time">{{message.time}}</div>
@@ -80,7 +80,7 @@ export default {
       .connect({
         onAddedToRoom: room => {
           this.room = room
-          this.listen
+          this.listen()
           console.log(`Added to room ${room.name}`)
         }
       })
@@ -151,18 +151,17 @@ export default {
           onMessage: message => {
             mlHttp
               .post(
-                "/gsug?query=" +
+                '/gsug?query=' +
                   message.parts[0].payload.content
               )
               .then(res => {
                 console.log(res)
-                this.firstAns = res.data.suggestions[0];
-                this.secondAns = res.data.suggestions[1];
-                this.thirdAns = res.data.suggestions[2];
-
+                this.firstAns = res.data.suggestions[0]
+                this.secondAns = res.data.suggestions[1]
+                this.thirdAns = res.data.suggestions[2]
               })
-              .catch(err => console.log(err));
-            if (message.senderId != this.currUser.id) {
+              .catch(err => console.log(err))
+            if (message.senderId !== this.currUser.id) {
               console.log('inn if')
               this.sentMessagesArray.push({
                 type: 'received',

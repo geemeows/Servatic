@@ -6,16 +6,13 @@
       <h1 style="text-align: center">
         <a-icon type="bank"/>&nbsp;Add New Company
       </h1>
-      {{ successNotification }}
-      {{ errorNotification }}
-
       <a-form
         id="components-form-demo-normal-login"
         :form="form"
         class="add-agents-form"
         @submit="addCompany"
       >
-        <a-spin tip="Loading..." :spinning="loadingIndicator">
+        <a-spin tip="Loading..." :spinning="isLoading">
           <div class="spin-content">
             <a-form-item>
               <a-input
@@ -80,46 +77,19 @@
 
 <script>
 export default {
+  props: ['isLoading'],
   data () {
     return {
-      form: this.$form.createForm(this)
-    }
-  },
-  computed: {
-    loadingIndicator () {
-      return this.$store.getters.getLoadingIndicator
-    },
-    successNotification () {
-      if (this.$store.getters.getSuccessNotification) {
-        this.$notification.open({
-          message: 'Successfully Added',
-          description: 'Company and moderator are successfully added.',
-          icon: <a-icon type="check" style="color:#00c610" />
-        })
-      }
-    },
-    errorNotification () {
-      if (this.$store.getters.getErrorNotification) {
-        this.$notification.open({
-          message: 'Somthing Went Wrong',
-          description: 'Company and moderator are not added.',
-          icon: <a-icon type="close" style="color:#c10000" />
-        })
-      }
+      form: this.$form.createForm(this),
+      isLodaing: false
     }
   },
   methods: {
     addCompany (e) {
       e.preventDefault()
-
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$store.dispatch('addCompany', {
-            companyName: values.companyName,
-            moderatorName: values.moderatorName,
-            moderatorEmail: values.moderatorEmail,
-            moderatorPassword: values.moderatorPassword
-          })
+          this.$emit('companyInfo', values)
         }
       })
     }

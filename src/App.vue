@@ -1,6 +1,6 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
-      <router-view name="sidebar"></router-view>
+    <router-view name="sidebar"></router-view>
     <a-layout>
       <router-view name="navbar"></router-view>
       <router-view/>
@@ -10,26 +10,13 @@
 </template>
 
 <script>
-import Sidebar from './components/Mutual/Sidebar'
-import Navbar from './components/Mutual/Navbar'
-import CryptoJS from 'crypto-js'
+// import Sidebar from './components/Mutual/Sidebar'
+// import Navbar from './components/Mutual/Navbar'
 export default {
-  components: {
-    Sidebar,
-    Navbar
-  },
-  created () {
-    // INIT
-    // var myString   = "https://www.titanesmedellin.com/";
-    // var myPassword = "myPassword";
-
-    // // PROCESS
-    // var encrypted = CryptoJS.AES.encrypt(myString, myPassword);
-    // var decrypted = CryptoJS.AES.decrypt(encrypted, myPassword);
-    // console.log(encrypted)
-    // console.log(decrypted)
-    // // console.log(decrypted.toString(CryptoJS.enc.Utf8))
-  }
+  // components: {
+  //   Sidebar,
+  //   Navbar
+  // }
 }
 </script>
 
@@ -69,6 +56,6 @@ export default {
   border-bottom: 1px solid #ebebeb !important;
 }
 .corps-name {
-  margin-left: 30px
+  margin-left: 30px;
 }
 </style>

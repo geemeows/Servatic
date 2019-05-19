@@ -10,7 +10,7 @@
       </a-col>
       <a-col :span="17" :offset="4">
         <a-card>
-          <a-form class="ticket-form" :form="form" @submit="login">
+          <a-form class="ticket-form" :form="form" @submit="signIn">
             <a-spin tip="Loading..." :spinning="isLoading">
               <div class="spin-content">
                 <a-form-item>
@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    login (e) {
+    signIn (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -68,14 +68,9 @@ export default {
           login({
             email: values.email,
             password: values.password
-          })
-          .then(res => {
+          }).then(res => {
             this.isLoading = false
           })
-          // this.$store.dispatch('login', {
-          //   email: values.email,
-          //   password: values.password
-          // })
         }
       })
     }

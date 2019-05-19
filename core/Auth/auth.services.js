@@ -1,13 +1,14 @@
 import { serverHttp } from '../httpClient'
 import router from '../../src/router'
-import { expireDate, saveLoginInfo } from './auth.model'
+import { expireDate, saveUserInfo, removeUserInfo } from './auth.model'
 
 export const logout = () => {
   // Delete LocalStorage Items
-  localStorage.removeItem('token')
-  localStorage.removeItem('accountType')
-  localStorage.removeItem('expireDate')
-  localStorage.removeItem('userEmail')
+  // localStorage.removeItem('token')
+  // localStorage.removeItem('accountType')
+  // localStorage.removeItem('expireDate')
+  // localStorage.removeItem('userEmail')
+  removeUserInfo()
   // Update The Route
   router.replace('/login')
 }
@@ -32,7 +33,7 @@ export const login = (payload) => {
       const expiresIn = expireDate(serverRes.expires_in)
 
       // Saving Token and Expiration Date to the browser local storage
-      saveLoginInfo(serverRes, payload.email, expiresIn)
+      saveUserInfo(serverRes, payload.email, expiresIn)
 
       // Update The Route
       if (serverRes.type === 'admin') router.replace('/add-company')

@@ -41,13 +41,14 @@
   </a-layout-sider>
 </template>
 <script>
+import Cookies from 'vue-cookies'
 export default {
   created () {
-    if (this.$route.fullPath == '/' || this.$route.fullPath == '/dashboard') this.menuActive = '1'
-    if (this.$route.fullPath == '/closed-tickets') this.menuActive = '2'
-    if (this.$route.fullPath == '/agents-list') this.menuActive = '3'
-    if (this.$route.fullPath == '/agent-chat') this.menuActive = '4'
-    if (this.$route.fullPath == '/add-company') this.menuActive = '5'
+    if (this.$route.fullPath === '/' || this.$route.fullPath === '/dashboard') this.menuActive = '1'
+    if (this.$route.fullPath === '/closed-tickets') this.menuActive = '2'
+    if (this.$route.fullPath === '/agents-list') this.menuActive = '3'
+    if (this.$route.fullPath === '/agent-chat') this.menuActive = '4'
+    if (this.$route.fullPath === '/add-company') this.menuActive = '5'
   },
   data () {
     return {
@@ -56,7 +57,7 @@ export default {
   },
   computed: {
     getAccountType () {
-      return this.$store.getters.getAccountType
+      return Cookies.get('accountType')
     }
   }
 }

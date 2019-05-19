@@ -18,7 +18,7 @@
             </a-menu-item>
             <a-divider style="padding: 0; margin: 0"/>
             <a-menu-item>
-              <a href="#" @click="logout">
+              <a href="#" @click="signOut">
                 <a-icon type="logout"/>&nbsp;Logout
               </a>
             </a-menu-item>
@@ -27,6 +27,8 @@
       </a-layout-header>
 </template>
 <script>
+import { logout } from '../../../core/Auth/auth.services'
+import Cookies from 'vue-cookies'
 export default {
   data () {
     return {
@@ -35,12 +37,12 @@ export default {
   },
   computed: {
     getAccType () {
-      return this.$store.getters.getAccountType
+      return Cookies.get('accountType')
     }
   },
   methods: {
-    logout () {
-      this.$store.dispatch('logout')
+    signOut () {
+      logout()
     }
   }
 }
