@@ -24,13 +24,13 @@
 </template>
 <script>
 export default {
-    
+
 }
 </script>
 <style scoped>
     .error-page {
         margin-top: 50px;
-    } 
+    }
     .error-page h1 {
         font-size: 130px;
         font-weight: bold;

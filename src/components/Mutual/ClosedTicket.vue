@@ -2,25 +2,25 @@
   <a-card :title="'Ticket No. #' + '123456'">
     <a-form class="ticket-form" :form="form">
       <a-form-item>
-        <a-date-picker 
+        <a-date-picker
         style="width: 100% !important;" @change="onChange" disabled
         :defaultValue="moment('2015-06-06', dateFormat)"/>
       </a-form-item>
       <a-form-item>
-        <a-input 
+        <a-input
         placeholder="Complaint" disabled>
           <a-icon slot="prefix" type="info-circle" style="color: rgba(0,0,0,.25)"/>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-input 
+        <a-input
         disabled
         placeholder="Action">
           <a-icon slot="prefix" type="form" style="color: rgba(0,0,0,.25)"/>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-textarea 
+        <a-textarea
         disabled
         placeholder="Complaint Summary" :rows="5"/>
       </a-form-item>
@@ -42,12 +42,12 @@
 </style>
 
 <script>
-import moment from 'moment';
+import moment from 'moment'
 export default {
-  data() {
+  data () {
     this.dateFormat = 'YYYY-MM-DD'
     return {
-      
+
     }
   },
   methods: {

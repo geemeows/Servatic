@@ -10,8 +10,8 @@
 <script>
 import ClosedTicket from '../../components/Mutual/ClosedTicket'
 export default {
-    components: {
-        ClosedTicket
-    }
+  components: {
+    ClosedTicket
+  }
 }
 </script>

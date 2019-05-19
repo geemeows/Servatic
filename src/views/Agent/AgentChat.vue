@@ -1,6 +1,6 @@
 <template>
   <a-layout-content
-    :style="{ margin: '15px 16px 0 16px', padding: '15px 24px 0 24px', 
+    :style="{ margin: '15px 16px 0 16px', padding: '15px 24px 0 24px',
         'height': '88.1vh'}"
   >
     <a-row :gutter="32">
@@ -80,30 +80,30 @@
 </style>
 
 <script>
-import clientTicket from "../../components/Agent/Ticket";
-import chatWindow from "../../components/Chat/Chat"
+import clientTicket from '../../components/Agent/Ticket'
+import chatWindow from '../../components/Chat/Chat'
 export default {
   components: {
     clientTicket,
     chatWindow
   },
-  data() {
+  data () {
     return {
-        clientsInQueue: 10,
-        clientInfo: {
-          name: "Muhammad El-Gazouly",
-          mobile: "+201119383483"
-        },
-        ticket: {
-          date: '',
-          complaint: '',
-          action: '',
-          summary: ''
-        }
-    };
+      clientsInQueue: 10,
+      clientInfo: {
+        name: 'Muhammad El-Gazouly',
+        mobile: '+201119383483'
+      },
+      ticket: {
+        date: '',
+        complaint: '',
+        action: '',
+        summary: ''
+      }
+    }
   },
   methods: {
-    receiveTicket(payload){
+    receiveTicket (payload) {
       this.ticket.date = payload.date
       this.ticket.complaint = payload.complaint
       this.ticket.action = payload.action

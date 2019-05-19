@@ -7,7 +7,6 @@ import ticketModule from './ticket/index'
 import adminPanel from './admin/index'
 import axios from 'axios'
 
-
 import router from '../router'
 
 Vue.use(Vuex)

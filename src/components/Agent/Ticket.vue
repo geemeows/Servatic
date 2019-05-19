@@ -2,27 +2,27 @@
   <a-card :title="'Ticket No. #' + ticketNo">
     <a-form class="ticket-form" :form="form">
       <a-form-item>
-        <a-date-picker 
-        v-decorator="['complaintDate', {rules: [{ required: true, message: 'Please, enter the date of the complaint!' }]}]" 
+        <a-date-picker
+        v-decorator="['complaintDate', {rules: [{ required: true, message: 'Please, enter the date of the complaint!' }]}]"
         style="width: 100% !important;" @change="onChange"/>
       </a-form-item>
       <a-form-item>
-        <a-input 
-        v-decorator="['complaint', {rules: [{ required: true, message: 'Please, enter the complaint title!' }]}]" 
+        <a-input
+        v-decorator="['complaint', {rules: [{ required: true, message: 'Please, enter the complaint title!' }]}]"
         placeholder="Complaint">
           <a-icon slot="prefix" type="info-circle" style="color: rgba(0,0,0,.25)"/>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-input 
-        v-decorator="['action', {rules: [{ required: true, message: 'Please, enter the action taken for this the complaint!' }]}]" 
+        <a-input
+        v-decorator="['action', {rules: [{ required: true, message: 'Please, enter the action taken for this the complaint!' }]}]"
         placeholder="Action">
           <a-icon slot="prefix" type="form" style="color: rgba(0,0,0,.25)"/>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-textarea 
-        v-decorator="['complaintSummary', {rules: [{ required: true, message: 'Please, enter the summary of the complaint!' }]}]" 
+        <a-textarea
+        v-decorator="['complaintSummary', {rules: [{ required: true, message: 'Please, enter the summary of the complaint!' }]}]"
         placeholder="Complaint Summary" :rows="5"/>
       </a-form-item>
       <a-form-item>
@@ -46,20 +46,20 @@
 <script>
 export default {
 
-  data() {
+  data () {
     return {
       form: this.$form.createForm(this),
-      ticketNo: "1598745632",
+      ticketNo: '1598745632',
       ticket: {
-          date: '',
-          complaint: '',
-          action: '',
-          summary: ''
-        }
-    };
+        date: '',
+        complaint: '',
+        action: '',
+        summary: ''
+      }
+    }
   },
   methods: {
-    submitComplaint() {
+    submitComplaint () {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.ticket.complaint = values.complaint
@@ -69,13 +69,13 @@ export default {
 
           this.$message.success('Complaint submitted successfully!') // Success Message
           this.$emit('receiveTicketData', this.ticket) // Sending out the information of the ticket
-          
-          // Clearing the fields 
-          this.form.resetFields();
+
+          // Clearing the fields
+          this.form.resetFields()
         }
-      });
+      })
     },
-    onChange(date, dateString) {
+    onChange (date, dateString) {
       this.ticket.date = dateString
     },
     confirm (e) {
@@ -84,7 +84,7 @@ export default {
     },
     cancel (e) {
       this.submitComplaint()
-    },
+    }
   }
-};
+}
 </script>

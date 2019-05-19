@@ -21,55 +21,55 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       dataSource: [
-          {
-              name: 'Gazouly',
-              status: 'Offline',
-              nClients: '32'
-          },
-          {
-              name: 'Hossam',
-              status: 'Online',
-              nClients: '10'
-          },
-          {
-              name: 'Dawoud',
-              status: 'Online',
-              nClients: '42'
-          },
-          {
-              name: 'Asmaa',
-              status: 'Offline',
-              nClients: '12'
-          }
+        {
+          name: 'Gazouly',
+          status: 'Offline',
+          nClients: '32'
+        },
+        {
+          name: 'Hossam',
+          status: 'Online',
+          nClients: '10'
+        },
+        {
+          name: 'Dawoud',
+          status: 'Online',
+          nClients: '42'
+        },
+        {
+          name: 'Asmaa',
+          status: 'Offline',
+          nClients: '12'
+        }
       ],
       columns: [
         {
-          title: "Name",
-          dataIndex: "name",
-          width: "33.3%"
+          title: 'Name',
+          dataIndex: 'name',
+          width: '33.3%'
         },
         {
-          title: "Status",
-          width: "33.3%",
-          dataIndex: "actions",
-          scopedSlots: { customRender: "delete" }
+          title: 'Status',
+          width: '33.3%',
+          dataIndex: 'actions',
+          scopedSlots: { customRender: 'delete' }
         },
         {
-          title: "#Clients served",
-          width: "33.3%",
-          dataIndex: "nClients"
+          title: '#Clients served',
+          width: '33.3%',
+          dataIndex: 'nClients'
         }
       ]
-    };
+    }
   },
   methods: {
-    onDelete(key) {
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.key !== key);
+    onDelete (key) {
+      const dataSource = [...this.dataSource]
+      this.dataSource = dataSource.filter(item => item.key !== key)
     }
   }
-};
+}
 </script>

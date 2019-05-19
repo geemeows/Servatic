@@ -1,6 +1,6 @@
 <template>
   <a-layout-content
-    :style="{background: '#F0F2F5', margin: '90px auto', 
+    :style="{background: '#F0F2F5', margin: '90px auto',
                                'height': '73.08vh'}"
   >
     <a-row>
@@ -10,8 +10,8 @@
       </a-col>
       <a-col :span="17" :offset="4">
         <a-card>
-          <a-form class="ticket-form" :form="form" @submit="Signin">
-            <a-spin tip="Loading..." :spinning="loadingIndicator">
+          <a-form class="ticket-form" :form="form" @submit="login">
+            <a-spin tip="Loading..." :spinning="isLoading">
               <div class="spin-content">
                 <a-form-item>
                   <a-input
@@ -51,32 +51,36 @@
   </a-layout-content>
 </template>
 <script>
+import { login } from '../../core/Auth/auth.services'
 export default {
-  data() {
+  data () {
     return {
       form: this.$form.createForm(this),
-    };
+      isLoading: false
+    }
   },
   methods: {
-    Signin(e) {
-      e.preventDefault();
-
+    login (e) {
+      e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$store.dispatch('login', {
+          this.isLoading = true
+          login({
             email: values.email,
             password: values.password
           })
+          .then(res => {
+            this.isLoading = false
+          })
+          // this.$store.dispatch('login', {
+          //   email: values.email,
+          //   password: values.password
+          // })
         }
-      });
-    }
-  },
-  computed: {
-    loadingIndicator () {
-      return this.$store.getters.getLoadingIndicator
+      })
     }
   }
-};
+}
 </script>
 <style scoped>
 .ant-row .ant-form-item {

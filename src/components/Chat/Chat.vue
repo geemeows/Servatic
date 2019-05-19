@@ -56,18 +56,18 @@
 </template>
 
 <script>
-import { Scrolly, ScrollyViewport, ScrollyBar } from "vue-scrolly";
-import { ChatManager, TokenProvider } from "@pusher/chatkit-client";
-import axios from "../../axios-ML.js";
+import { Scrolly, ScrollyViewport, ScrollyBar } from 'vue-scrolly'
+import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
+import { mlHttp } from '../../../core/httpClient'
 
 const chatManager = new ChatManager({
-  instanceLocator: "v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1",
-  userId: "Ahmed@gmail.com",
+  instanceLocator: 'v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1',
+  userId: 'Ahmed@gmail.com',
   tokenProvider: new TokenProvider({
     url:
-      "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token"
+      'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token'
   })
-});
+})
 
 export default {
   components: {
@@ -75,105 +75,109 @@ export default {
     ScrollyViewport,
     ScrollyBar
   },
-  created() {
+  created () {
     chatManager
       .connect({
         onAddedToRoom: room => {
-          this.room = room;
-          this.listen;
-          console.log(`Added to room ${room.name}`);
+          this.room = room
+          this.listen
+          console.log(`Added to room ${room.name}`)
         }
       })
       .then(currentUser => {
-        this.currUser = currentUser;
-        console.log("Successful connection", currentUser);
+        this.currUser = currentUser
+        console.log('Successful connection', currentUser)
       })
       .catch(err => {
-        console.log("Error on connection", err);
-      });
+        console.log('Error on connection', err)
+      })
   },
-  mounted() {
+  mounted () {
     // This function makes the chat scrollbar scrolles down instantaneously
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       window.setInterval(() => {
-        let scroll = this.$el.querySelector(".test");
-        if (scroll.scrollTop !== 0) this.scrollTop();
-      }, 0);
-    });
+        let scroll = this.$el.querySelector('.test')
+        if (scroll.scrollTop !== 0) this.scrollTop()
+      }, 0)
+    })
   },
-  data() {
+  data () {
     return {
       form: this.$form.createForm(this),
-      message: "",
-      time: "10:30 PM",
+      message: '',
+      time: '10:30 PM',
       sentMessagesArray: [],
-      firstAns: "The First Ans",
-      secondAns: "The Second Ans",
-      thirdAns: "The Third Ans",
+      firstAns: 'The First Ans',
+      secondAns: 'The Second Ans',
+      thirdAns: 'The Third Ans',
       currUser: null,
       room: null
-    };
+    }
   },
   methods: {
-    insertMessage() {
-      if (this.message !== "") {
+    insertMessage () {
+      if (this.message !== '') {
         this.sentMessagesArray.push({
-          type: "sent",
+          type: 'sent',
           message: this.message,
           time: this.time
-        });
+        })
       }
 
-      this.scrollTop();
+      this.scrollTop()
       this.currUser
         .sendSimpleMessage({
           roomId: this.room.id,
           text: this.message
         })
         .then(messageId => {
-          console.log(`Added message to ${this.room.name}`);
+          console.log(`Added message to ${this.room.name}`)
         })
         .catch(err => {
-          console.log(`Error adding message to ${this.room.name}: ${err}`);
-        });
-      this.message = "";
+          console.log(`Error adding message to ${this.room.name}: ${err}`)
+        })
+      this.message = ''
     },
-    scrollTop() {
-      let scrollToBottom = this.$el.querySelector(".test");
-      scrollToBottom.scrollTop = scrollToBottom.scrollHeight;
+    scrollTop () {
+      let scrollToBottom = this.$el.querySelector('.test')
+      scrollToBottom.scrollTop = scrollToBottom.scrollHeight
     }
   },
   computed: {
-    listen() {
+    listen () {
       this.currUser.subscribeToRoomMultipart({
         roomId: this.room.id,
         hooks: {
           onMessage: message => {
-            axios
+            mlHttp
               .post(
                 "/gsug?query=" +
                   message.parts[0].payload.content
               )
               .then(res => {
+                console.log(res)
                 this.firstAns = res.data.suggestions[0];
                 this.secondAns = res.data.suggestions[1];
                 this.thirdAns = res.data.suggestions[2];
-                if (message.senderId != this.currUser.id)
-                  this.sentMessagesArray.push({
-                    type: "received",
-                    message: message.parts[0].payload.content,
-                    time: this.time
-                  });
+
               })
               .catch(err => console.log(err));
-            console.log("received message", message);
+            if (message.senderId != this.currUser.id) {
+              console.log('inn if')
+              this.sentMessagesArray.push({
+                type: 'received',
+                message: message.parts[0].payload.content,
+                time: this.time
+              })
+            }
+            console.log('received message', message)
           }
         },
         messageLimit: 0
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -253,12 +257,13 @@ export default {
 }
 .suggestions {
   padding-top: 5px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 .suggestions div {
   padding: 2px 10px;
-  float: left;
-  width: 181px;
+  /* float: left;
+  width: 181px; */
+  margin-bottom: 5px;
   border: 1px solid #40a9ff;
   margin-right: 5px;
   border-radius: 10px;

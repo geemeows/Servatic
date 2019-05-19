@@ -5,4 +5,4 @@ export default {
   getErrorNotification (state) {
     return state.errorNotification
   }
-};
+}

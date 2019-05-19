@@ -59,36 +59,36 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
-       form: this.$form.createForm(this),
-       agentData: {
-         name:'',
-         email:'',
-         username:'',
-         password:''
-       }
-    };
+      form: this.$form.createForm(this),
+      agentData: {
+        name: '',
+        email: '',
+        username: '',
+        password: ''
+      }
+    }
   },
   methods: {
-    handleSubmit(e) {
-      e.preventDefault();
+    handleSubmit (e) {
+      e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
           this.agentData.name = values.agentName
           this.agentData.email = values.agentEmail
           this.agentData.username = values.agentUsername
           this.agentData.password = values.agentPassword
-          
+
           this.$emit('closeDrawer', true)
           this.$emit('agentData', this.agentData)
-          this.$message.success('Registeration Completed');
+          this.$message.success('Registeration Completed')
           this.form.resetFields()
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 <style lang="">
 </style>

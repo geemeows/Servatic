@@ -73,7 +73,7 @@
 <style scoped>
 
 .card {
-  transition: all .3s ease-in-out; 
+  transition: all .3s ease-in-out;
 }
 
 .card:hover {

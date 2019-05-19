@@ -80,51 +80,51 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       form: this.$form.createForm(this)
-    };
+    }
   },
   computed: {
-    loadingIndicator() {
-      return this.$store.getters.getLoadingIndicator;
+    loadingIndicator () {
+      return this.$store.getters.getLoadingIndicator
     },
-    successNotification() {
+    successNotification () {
       if (this.$store.getters.getSuccessNotification) {
         this.$notification.open({
-          message: "Successfully Added",
-          description: "Company and moderator are successfully added.",
+          message: 'Successfully Added',
+          description: 'Company and moderator are successfully added.',
           icon: <a-icon type="check" style="color:#00c610" />
-        });
+        })
       }
     },
-    errorNotification() {
+    errorNotification () {
       if (this.$store.getters.getErrorNotification) {
         this.$notification.open({
-          message: "Somthing Went Wrong",
-          description: "Company and moderator are not added.",
+          message: 'Somthing Went Wrong',
+          description: 'Company and moderator are not added.',
           icon: <a-icon type="close" style="color:#c10000" />
-        });
+        })
       }
     }
   },
   methods: {
-    addCompany(e) {
-      e.preventDefault();
+    addCompany (e) {
+      e.preventDefault()
 
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$store.dispatch("addCompany", {
+          this.$store.dispatch('addCompany', {
             companyName: values.companyName,
             moderatorName: values.moderatorName,
             moderatorEmail: values.moderatorEmail,
             moderatorPassword: values.moderatorPassword
-          });
+          })
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style>

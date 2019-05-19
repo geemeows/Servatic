@@ -28,20 +28,20 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
 
     }
   },
   computed: {
-    getAccType() {
+    getAccType () {
       return this.$store.getters.getAccountType
     }
   },
   methods: {
-    logout() {
+    logout () {
       this.$store.dispatch('logout')
-    } 
+    }
   }
 }
 </script>

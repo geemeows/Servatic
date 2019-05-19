@@ -1,10 +1,11 @@
-import axios from 'axios';
-import Store from '../store';
+
+import Store from '../store'
+import { serverHttp } from '../../../core/httpClient'
 export default {
   addCompany ({ commit }, payload) {
     // Show Loading Indicator
     commit('setLoading', true)
-    axios
+    serverHttp
       .post(
         '/companies?name=' +
           payload.companyName +
@@ -14,7 +15,7 @@ export default {
       .then(res => {
         console.log('company success', res)
         // Adding Company Moderator
-        axios
+        serverHttp
           .post(
             '/moderators?name=' +
               payload.moderatorName +

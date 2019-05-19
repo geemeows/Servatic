@@ -36,51 +36,51 @@
   </a-layout-content>
 </template>
 <script>
-import addAgent from "../../components/Moderator/AddAgent"
+import addAgent from '../../components/Moderator/AddAgent'
 export default {
   components: {
     addAgent
   },
-  data() {
+  data () {
     return {
       visible: false,
       key: 0,
       dataSource: [],
       columns: [
         {
-          title: "Name",
-          dataIndex: "name",
-          width: "30%"
+          title: 'Name',
+          dataIndex: 'name',
+          width: '30%'
         },
         {
-          title: "Username",
-          dataIndex: "username"
+          title: 'Username',
+          dataIndex: 'username'
         },
         {
-          title: "Email Address",
-          dataIndex: "email"
+          title: 'Email Address',
+          dataIndex: 'email'
         },
         {
-          title: "Delete",
-          width: "10%",
-          dataIndex: "actions",
-          scopedSlots: { customRender: "delete" }
+          title: 'Delete',
+          width: '10%',
+          dataIndex: 'actions',
+          scopedSlots: { customRender: 'delete' }
         }
       ]
-    };
+    }
   },
   methods: {
-    onDelete(key) {
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.key !== key);
+    onDelete (key) {
+      const dataSource = [...this.dataSource]
+      this.dataSource = dataSource.filter(item => item.key !== key)
     },
-    showDrawer() {
-      this.visible = true;
+    showDrawer () {
+      this.visible = true
     },
-    onClose() {
-      this.visible = false;
+    onClose () {
+      this.visible = false
     },
-    addNewAgent(payload) {
+    addNewAgent (payload) {
       let newAgent = {
         key: this.key,
         name: '',
@@ -94,7 +94,7 @@ export default {
       this.key++
     }
   }
-};
+}
 </script>
 <style>
 .clearfix {
