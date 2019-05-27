@@ -3,11 +3,7 @@ import router from '../../src/router'
 import { expireDate, saveUserInfo, removeUserInfo } from './auth.model'
 
 export const logout = () => {
-  // Delete LocalStorage Items
-  // localStorage.removeItem('token')
-  // localStorage.removeItem('accountType')
-  // localStorage.removeItem('expireDate')
-  // localStorage.removeItem('userEmail')
+  // Delete Cookies Items
   removeUserInfo()
   // Update The Route
   router.replace('/login')
@@ -15,7 +11,6 @@ export const logout = () => {
 
 const autoLogout = (expiresIn) => {
   setTimeout(() => {
-    console.log('fired')
     // Call The Logout function
     logout()
   }, expiresIn * 1000)
@@ -36,7 +31,7 @@ export const login = (payload) => {
       saveUserInfo(serverRes, payload.email, expiresIn)
 
       // Update The Route
-      if (serverRes.type === 'admin') router.replace('/add-company')
+      if (serverRes.type === 'admin') router.replace('/view-companies')
       else if (serverRes.type === 'moderator') router.replace('/dashboard')
       else router.replace('/agent-chat')
 

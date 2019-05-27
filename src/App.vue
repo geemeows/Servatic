@@ -10,13 +10,8 @@
 </template>
 
 <script>
-// import Sidebar from './components/Mutual/Sidebar'
-// import Navbar from './components/Mutual/Navbar'
 export default {
-  // components: {
-  //   Sidebar,
-  //   Navbar
-  // }
+
 }
 </script>
 

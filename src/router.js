@@ -9,6 +9,7 @@ import Sidebar from './components/Mutual/Sidebar.vue'
 import Navbar from './components/Mutual/Navbar.vue'
 import Login from './views/Login.vue'
 import addCompany from './views/AdminPanel/AddCompany.vue'
+import viewCompanies from './views/AdminPanel/ViewCompanies.vue'
 import Cookies from 'vue-cookies'
 
 Vue.use(Router)
@@ -97,7 +98,22 @@ const router = new Router({
         token = Cookies.get('token')
         accountType = Cookies.get('accountType')
         if (token && accountType === 'admin') next()
-        else next('/404') 
+        else next('/404')
+      }
+    },
+    {
+      path: '/view-companies',
+      name: 'viewCompanies',
+      components: {
+        default: viewCompanies,
+        sidebar: Sidebar,
+        navbar: Navbar
+      },
+      beforeEnter (to, from, next) {
+        token = Cookies.get('token')
+        accountType = Cookies.get('accountType')
+        if (token && accountType === 'admin') next()
+        else next('/404')
       }
     },
     {
