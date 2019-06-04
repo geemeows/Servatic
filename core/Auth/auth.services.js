@@ -1,3 +1,4 @@
+import Cookies from 'vue-cookies'
 import { serverHttp } from '../httpClient'
 import router from '../../src/router'
 import { expireDate, saveUserInfo, removeUserInfo } from './auth.model'
@@ -17,7 +18,6 @@ const autoLogout = (expiresIn) => {
 }
 
 export const login = (payload) => {
-  // AJAX Call via Axios
   return serverHttp.post('/login', {
     email: payload.email,
     password: payload.password
@@ -27,15 +27,35 @@ export const login = (payload) => {
       // Formatting the Expiration Date
       const expiresIn = expireDate(serverRes.expires_in)
 
-      // Saving Token and Expiration Date to the browser local storage
+      // Saving Token and Expiration Date in cookies
       saveUserInfo(serverRes, payload.email, expiresIn)
 
-      // Update The Route
-      if (serverRes.type === 'admin') router.replace('/view-companies')
-      else if (serverRes.type === 'moderator') router.replace('/dashboard')
-      else router.replace('/agent-chat')
+      // Getting Company Name and update route
+      if(serverRes.model.company_id) return getCompanyName(serverRes.model.company_id, serverRes.access_token, serverRes.model.type)
+      else updateRoute(serverRes.model.type)
 
       // Start the Expiration Timer
       autoLogout(serverRes.expires_in)
     })
+}
+
+const getCompanyName = (payload, token, accountType) => {
+  return serverHttp.get(`companies/${payload}/`, {
+    params: {
+      token
+    }
+  })
+  .then(res => {
+    Cookies.set('companyName', res.data[0].name)
+    // Update Route
+    updateRoute(accountType)
+  })
+  .catch(err => console.log(err))
+}
+
+const updateRoute = (accountType) => {
+    // Update The Route
+    if (accountType === 'admin') router.replace('/view-companies')
+    else if (accountType === 'moderator') router.replace('/dashboard')
+    else router.replace('/agent-chat')
 }

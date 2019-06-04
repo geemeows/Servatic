@@ -1,6 +1,6 @@
 <template>
           <a-layout-header style="background: #fff; padding: 0; box-shadow: 0 2px 5px rgba(0,21,41,.13); font-size: 18px">
-        <span class="corps-name">{{ getAccType === 'admin'? 'Servatic Admin Panel' : 'Company Name'}}</span>
+        <span class="corps-name">{{ getAccType === 'admin'? 'Servatic Admin Panel' : getCompanyName}}</span>
         <a-dropdown>
           <a class="ant-dropdown-link">
             <a-avatar icon="user" size="small"/>&nbsp;{{ getEmail }}
@@ -41,6 +41,9 @@ export default {
     },
     getEmail () {
       return Cookies.get('userEmail')
+    },
+    getCompanyName() {
+      return Cookies.get('companyName')
     }
   },
   methods: {

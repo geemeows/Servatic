@@ -18,11 +18,11 @@ export const addCompany = (payload) => {
 
 export const removeCompany = (id) => {
   return serverHttp
-    .delete('/companies/', {
-      token,
-      id
+    .delete(`/companies/${id}`, {
+      params: {
+        token
+      }
     })
-    .then(res => console.log(res))
 }
 
 const addModerator = (payload, companyID) => {

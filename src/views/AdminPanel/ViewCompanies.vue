@@ -34,10 +34,15 @@ export default {
     },
     methods: {
         updateCompanies(payload) {
-            this.companies = payload.updatedList
+            this.isLoading = true
             removeCompany(payload.deletedItem)
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
+            .then((res) => {
+                console.log(res)
+                this.isLoading = false
+                this.companies = payload.updatedList
+            })
+            .catch(err => console.log(err))
+            
         }
     }
 }

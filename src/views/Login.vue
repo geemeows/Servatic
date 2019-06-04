@@ -68,7 +68,7 @@ export default {
           login({
             email: values.email,
             password: values.password
-          }).then(res => {
+          }).then(() => {
             this.isLoading = false
           })
         }
