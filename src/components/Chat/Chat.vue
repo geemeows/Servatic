@@ -59,15 +59,16 @@
 import { Scrolly, ScrollyViewport, ScrollyBar } from 'vue-scrolly'
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
 import { mlHttp } from '../../../core/httpClient'
+import { initChatManager } from '../../../core/Chat/chat.services'
 
-const chatManager = new ChatManager({
-  instanceLocator: 'v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1',
-  userId: 'Ahmed@gmail.com',
-  tokenProvider: new TokenProvider({
-    url:
-      'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token'
-  })
-})
+// const chatManager = new ChatManager({
+//   instanceLocator: 'v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1',
+//   userId: 'Ahmed@gmail.com',
+//   tokenProvider: new TokenProvider({
+//     url:
+//       'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token'
+//   })
+// })
 
 export default {
   components: {
@@ -76,6 +77,7 @@ export default {
     ScrollyBar
   },
   created () {
+    const chatManager = initChatManager
     chatManager
       .connect({
         onAddedToRoom: room => {
@@ -149,18 +151,18 @@ export default {
         roomId: this.room.id,
         hooks: {
           onMessage: message => {
-            mlHttp
-              .post(
-                '/gsug?query=' +
-                  message.parts[0].payload.content
-              )
-              .then(res => {
-                console.log(res)
-                this.firstAns = res.data.suggestions[0]
-                this.secondAns = res.data.suggestions[1]
-                this.thirdAns = res.data.suggestions[2]
-              })
-              .catch(err => console.log(err))
+            // mlHttp
+            //   .post(
+            //     '/gsug?query=' +
+            //       message.parts[0].payload.content
+            //   )
+            //   .then(res => {
+            //     console.log(res)
+            //     this.firstAns = res.data.suggestions[0]
+            //     this.secondAns = res.data.suggestions[1]
+            //     this.thirdAns = res.data.suggestions[2]
+            //   })
+            //   .catch(err => console.log(err))
             if (message.senderId !== this.currUser.id) {
               console.log('inn if')
               this.sentMessagesArray.push({
