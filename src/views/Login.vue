@@ -71,6 +71,9 @@ export default {
           }).then(() => {
             this.isLoading = false
           })
+          .catch(err => {
+            this.isLoading = false
+          })
         }
       })
     }

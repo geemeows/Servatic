@@ -1,11 +1,11 @@
 <template>
   <a-card class="chat-window" title="Chatting Area">
     <div class="chat-box">
-      <scrolly class="vertical-scrollbar-demo" :passive-scroll="true" :style="{height: '310px' }">
+      <scrolly class="vertical-scrollbar-demo" :passive-scroll="true" :style="{height: '266px' }">
         <scrolly-viewport class="test">
           <div class="chat-messages">
             <!-- sent / received are the classes of the sent and received messages -->
-            <div v-for="message in sentMessagesArray" :key="message">
+            <div v-for="message in sentMessagesArray" :key="message.id">
               <div :class="message.type">
                 <div class="content">{{message.message}}</div>
                 <div class="time">{{message.time}}</div>
@@ -34,7 +34,7 @@
                 @keydown.enter.exact.prevent
                 @keyup.enter.exact="insertMessage"
               >
-                <a-icon slot="prefix" type="message" style="color: rgba(0,0,0,.25)"/>
+                <a-icon slot="prefix" type="message" style="color: rgba(0,0,0,.25)" />
               </a-input>
             </a-form-item>
           </a-col>
@@ -46,6 +46,7 @@
                 icon="arrow-right"
                 html-type="submit"
                 @click="insertMessage"
+                :disabled="startChat"
               ></a-button>
             </a-form-item>
           </a-col>
@@ -56,19 +57,9 @@
 </template>
 
 <script>
-import { Scrolly, ScrollyViewport, ScrollyBar } from 'vue-scrolly'
-import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
-import { mlHttp } from '../../../core/httpClient'
-import { initChatManager } from '../../../core/Chat/chat.services'
-
-// const chatManager = new ChatManager({
-//   instanceLocator: 'v1:us1:36b1d33d-9c63-4cb7-a38b-a700704de3a1',
-//   userId: 'Ahmed@gmail.com',
-//   tokenProvider: new TokenProvider({
-//     url:
-//       'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token'
-//   })
-// })
+import { Scrolly, ScrollyViewport, ScrollyBar } from "vue-scrolly";
+import { mlHttp } from "../../../core/httpClient";
+import { initChatManager } from "../../../core/Chat/chat.services";
 
 export default {
   components: {
@@ -76,77 +67,84 @@ export default {
     ScrollyViewport,
     ScrollyBar
   },
-  created () {
-    const chatManager = initChatManager
+  created() {
+    const chatManager = initChatManager;
     chatManager
       .connect({
         onAddedToRoom: room => {
-          this.room = room
-          this.listen()
-          console.log(`Added to room ${room.name}`)
+          console.log(`Added to room ${room.name}`);
+          this.startChat = false
+          this.room = room;
+          this.listen();
         }
       })
       .then(currentUser => {
-        this.currUser = currentUser
-        console.log('Successful connection', currentUser)
+        this.currUser = currentUser;
+        console.log("Successful connection", currentUser);
       })
       .catch(err => {
-        console.log('Error on connection', err)
-      })
+        console.log("Error on connection", err);
+      });
   },
-  mounted () {
+  mounted() {
     // This function makes the chat scrollbar scrolles down instantaneously
-    this.$nextTick(function () {
+    this.$nextTick(function() {
       window.setInterval(() => {
-        let scroll = this.$el.querySelector('.test')
-        if (scroll.scrollTop !== 0) this.scrollTop()
-      }, 0)
-    })
+        let scroll = this.$el.querySelector(".test");
+        if (scroll.scrollTop !== 0) this.scrollTop();
+      }, 0);
+    });
   },
-  data () {
+  data() {
     return {
       form: this.$form.createForm(this),
-      message: '',
-      time: '10:30 PM',
+      message: "",
+      time: "10:30 PM",
       sentMessagesArray: [],
-      firstAns: 'The First Ans',
-      secondAns: 'The Second Ans',
-      thirdAns: 'The Third Ans',
+      firstAns: "The First Ans",
+      secondAns: "The Second Ans",
+      thirdAns: "The Third Ans",
       currUser: null,
-      room: null
-    }
+      room: null,
+      startChat: true
+    };
   },
   methods: {
-    insertMessage () {
-      if (this.message !== '') {
+    insertMessage() {
+      if (this.message !== "") {
         this.sentMessagesArray.push({
-          type: 'sent',
+          type: "sent",
           message: this.message,
           time: this.time
-        })
+        });
       }
-
-      this.scrollTop()
       this.currUser
         .sendSimpleMessage({
           roomId: this.room.id,
           text: this.message
         })
         .then(messageId => {
-          console.log(`Added message to ${this.room.name}`)
+          if (this.message !== "") {
+            this.sentMessagesArray.push({
+            id: messageId,
+              type: "sent",
+              message: this.message,
+              time: this.time
+            });
+          }
         })
         .catch(err => {
-          console.log(`Error adding message to ${this.room.name}: ${err}`)
-        })
-      this.message = ''
+          console.log(`Error adding message to ${this.room.name}: ${err}`);
+        });
+
+      this.scrollTop();
+      this.message = "";
     },
-    scrollTop () {
-      let scrollToBottom = this.$el.querySelector('.test')
-      scrollToBottom.scrollTop = scrollToBottom.scrollHeight
-    }
-  },
-  computed: {
-    listen () {
+    scrollTop() {
+      let scrollToBottom = this.$el.querySelector(".test");
+      scrollToBottom.scrollTop = scrollToBottom.scrollHeight;
+    },
+    listen() {
       this.currUser.subscribeToRoomMultipart({
         roomId: this.room.id,
         hooks: {
@@ -164,21 +162,22 @@ export default {
             //   })
             //   .catch(err => console.log(err))
             if (message.senderId !== this.currUser.id) {
-              console.log('inn if')
+              console.log("inn if");
               this.sentMessagesArray.push({
-                type: 'received',
+                id: message.id,
+                type: "received",
                 message: message.parts[0].payload.content,
                 time: this.time
-              })
+              });
             }
-            console.log('received message', message)
+            console.log("received message", message);
           }
         },
         messageLimit: 0
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -187,7 +186,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 21, 41, 0.13);
 }
 .chat-box {
-  height: 314px;
+  height: 269px;
 }
 .chat-box::before {
   content: "";
