@@ -16,7 +16,15 @@ export const addAgent = (payload) => {
 }
 
 export const getCompanyAgents = () => {
-  return serverHttp.get(`agents/company/${companyID}`, {
+  return serverHttp.get(`/agents/company/${companyID}`, {
+    params: {
+      token
+    }
+  })
+}
+
+export const deleteAgent = (id) => {
+  return serverHttp.delete(`/agents/${id}`, {
     params: {
       token
     }

@@ -22,6 +22,13 @@
       </a-drawer>
 
       <a-table bordered :dataSource="dataSource" :columns="columns" :loading="isLoading">
+        <template slot="busy" slot-scope="text, record">
+            <span :style="[record.busy == 'Available'? {'color': '#52c41a'} : {'color': '#c41919'}]">
+                <a-icon v-if="record.busy == 'Available'" type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
+                <a-icon v-if="record.busy == 'Busy'" type="minus-circle" theme="twoTone" twoToneColor="#c41919" />
+                {{record.busy}}
+            </span>
+        </template>
         <template slot="delete" slot-scope="text, record">
           <a-popconfirm
             v-if="dataSource.length"
@@ -40,6 +47,7 @@ import addAgentForm from '../../components/Moderator/AddAgent'
 import { addAgent } from '../../../core/Moderator/moderator.services'
 import { getCompanyAgents } from '../../../core/Moderator/moderator.services'
 import { formatAgent } from '../../../core/Moderator/moderator.model'
+import { deleteAgent } from '../../../core/Moderator/moderator.services'
 
 export default {
   components: {
@@ -72,12 +80,17 @@ export default {
           width: '30%'
         },
         {
-          title: 'Created At',
-          dataIndex: 'createdAt'
-        },
-        {
           title: 'Email Address',
           dataIndex: 'email'
+        },
+        {
+          title: 'Busy',
+          dataIndex: 'busy',
+          scopedSlots: { customRender: 'busy' }
+        },
+        {
+          title: 'Created At',
+          dataIndex: 'createdAt'
         },
         {
           title: 'Delete',
@@ -90,8 +103,23 @@ export default {
   },
   methods: {
     onDelete (key) {
-      const dataSource = [...this.dataSource]
-      this.dataSource = dataSource.filter(item => item.key !== key)
+      this.isLoading = true
+      deleteAgent(key)
+        .then(res => {
+          console.log(res)
+          this.isLoading = false
+          this.$message.success("Agent Deleted Successfully!")
+
+          const dataSource = [...this.dataSource]
+          this.dataSource = dataSource.filter(item => item.key !== key)
+        })
+        .catch(err => {
+          console.log(err)
+          this.isLoading = false
+          this.$message.success("Deleting Agent Failed!")
+        }) 
+      // const dataSource = [...this.dataSource]
+      // this.dataSource = dataSource.filter(item => item.key !== key)
     },
     showDrawer () {
       this.visible = true
@@ -111,6 +139,7 @@ export default {
             key: res.data.user_id,
             name: payload.name,
             createdAt: res.data.created_at,
+            busy: res.data.busy ? 'Busy' : 'Available',
             email: payload.email
           })
           this.$message.success("Registeration Completed!");

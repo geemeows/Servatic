@@ -4,6 +4,7 @@ export const formatAgent = (payload) => {
     key: payload.id,
     name: payload.name,
     email: payload.email,
+    busy: payload.busy ? 'Busy' : 'Available',
     createdAt: payload.created_at
   }
 }
