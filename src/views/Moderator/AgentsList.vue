@@ -18,10 +18,10 @@
         placement="left"
         :wrapStyle="{height: 'calc(100% - 108px)',overflow: 'auto',paddingBottom: '108px'}"
       >
-        <add-agent @closeDrawer="onClose" @agentData="addNewAgent"></add-agent>
+        <add-agent-form @closeDrawer="onClose" @agentData="addNewAgent" :loading="isLoading"></add-agent-form>
       </a-drawer>
 
-      <a-table bordered :dataSource="dataSource" :columns="columns">
+      <a-table bordered :dataSource="dataSource" :columns="columns" :loading="isLoading">
         <template slot="delete" slot-scope="text, record">
           <a-popconfirm
             v-if="dataSource.length"
@@ -36,15 +36,34 @@
   </a-layout-content>
 </template>
 <script>
-import addAgent from '../../components/Moderator/AddAgent'
+import addAgentForm from '../../components/Moderator/AddAgent'
+import { addAgent } from '../../../core/Moderator/moderator.services'
+import { getCompanyAgents } from '../../../core/Moderator/moderator.services'
+import { formatAgent } from '../../../core/Moderator/moderator.model'
+
 export default {
   components: {
-    addAgent
+    addAgentForm
+  },
+  created() {
+    this.isLoading = true
+    getCompanyAgents()
+      .then(res => {
+        const serverRes = res.data
+        this.isLoading = false
+        this.dataSource = serverRes.map((agent) => {
+          return formatAgent(agent)
+        })
+      })
+      .catch(err => {
+        this.isLoading = false
+        console.log(err)
+      })
   },
   data () {
     return {
       visible: false,
-      key: 0,
+      isLoading: false,
       dataSource: [],
       columns: [
         {
@@ -53,8 +72,8 @@ export default {
           width: '30%'
         },
         {
-          title: 'Username',
-          dataIndex: 'username'
+          title: 'Created At',
+          dataIndex: 'createdAt'
         },
         {
           title: 'Email Address',
@@ -81,17 +100,27 @@ export default {
       this.visible = false
     },
     addNewAgent (payload) {
-      let newAgent = {
-        key: this.key,
-        name: '',
-        username: '',
-        email: ''
-      }
-      newAgent.name = payload.name
-      newAgent.username = payload.username
-      newAgent.email = payload.email
-      this.dataSource.push(newAgent)
-      this.key++
+      this.isLoading = true
+
+      addAgent(payload)
+        .then(res => {
+          this.isLoading = false
+          this.onClose()
+
+          this.dataSource.push({
+            key: res.data.user_id,
+            name: payload.name,
+            createdAt: res.data.created_at,
+            email: payload.email
+          })
+          this.$message.success("Registeration Completed!");
+        })
+        .catch(err => {
+          this.isLoading = false
+          this.onClose()
+          this.$message.error("Registeration Failed!");
+          console.log(err)
+        })
     }
   }
 }

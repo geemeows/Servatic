@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const serverHttp = axios.create({
-  baseURL: 'https://cors-anywhere.herokuapp.com/https://servatica.herokuapp.com/api'
+  baseURL: 'https://servatica.herokuapp.com/api'
 })
 
 export const mlHttp = axios.create({

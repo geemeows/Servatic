@@ -1,8 +1,10 @@
 <template>
-  <a-form
+  <a-spin tip="Loading..." :spinning="loading">
+    <a-form
     id="components-form-demo-normal-login"
     :form="form"
     class="add-agents-form"
+    :loading="true"
     @submit="handleSubmit"
   >
     <a-divider>Personal Info</a-divider>
@@ -14,9 +16,10 @@
               ]"
         placeholder="Agent Name"
       >
-        <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
+        <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
       </a-input>
     </a-form-item>
+    <a-divider>Login Info</a-divider>
     <a-form-item>
       <a-input
         v-decorator="[
@@ -25,19 +28,7 @@
               ]"
         placeholder="Email Address"
       >
-        <a-icon slot="prefix" type="mail" style="color: rgba(0,0,0,.25)"/>
-      </a-input>
-    </a-form-item>
-    <a-divider>Login Info</a-divider>
-    <a-form-item>
-      <a-input
-        v-decorator="[
-                'agentUsername',
-                { rules: [{ required: true, message: 'Please input agent username!' }] }
-              ]"
-        placeholder="Username"
-      >
-        <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
+        <a-icon slot="prefix" type="mail" style="color: rgba(0,0,0,.25)" />
       </a-input>
     </a-form-item>
     <a-form-item>
@@ -49,46 +40,45 @@
         type="password"
         placeholder="Password"
       >
-        <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
+        <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
       </a-input>
     </a-form-item>
     <a-form-item>
       <a-button type="primary" html-type="submit" class="login-form-button" block>Add Agent</a-button>
     </a-form-item>
   </a-form>
+  </a-spin>
 </template>
 <script>
 export default {
-  data () {
+  props:['loading'],
+  data() {
     return {
       form: this.$form.createForm(this),
       agentData: {
-        name: '',
-        email: '',
-        username: '',
-        password: ''
+        name: "",
+        email: "",
+        username: "",
+        password: ""
       }
-    }
+    };
   },
   methods: {
-    handleSubmit (e) {
-      e.preventDefault()
+    handleSubmit(e) {
+      e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.agentData.name = values.agentName
-          this.agentData.email = values.agentEmail
-          this.agentData.username = values.agentUsername
-          this.agentData.password = values.agentPassword
+          this.agentData.name = values.agentName;
+          this.agentData.email = values.agentEmail;
+          this.agentData.password = values.agentPassword;
 
-          this.$emit('closeDrawer', true)
-          this.$emit('agentData', this.agentData)
-          this.$message.success('Registeration Completed')
-          this.form.resetFields()
+          this.$emit("agentData", this.agentData);
+          // this.form.resetFields();
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style lang="">
 </style>

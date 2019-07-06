@@ -10,8 +10,13 @@
 <script>
 import { viewCompanies, removeCompany} from '../../../core/Admin/admin.services'
 import companiesList from '../../components/Admin/CompaniesList'
+import Cookies from 'vue-cookies'
 export default {
+    beforeCreate() {
+        console.log("beforeCreate lifecycle: ", Cookies.get('token'));
+    },
     created() {
+        console.log("create lifecycle: ", Cookies.get('token'));
         this.isLoading = true
         viewCompanies()
         .then(res => {
