@@ -116,7 +116,7 @@ export default {
         .catch(err => {
           console.log(err)
           this.isLoading = false
-          this.$message.success("Deleting Agent Failed!")
+          this.$message.error("Deleting Agent Failed!")
         }) 
       // const dataSource = [...this.dataSource]
       // this.dataSource = dataSource.filter(item => item.key !== key)

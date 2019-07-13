@@ -7,6 +7,8 @@ export const logout = () => {
   removeUserInfo()
   // Update The Route
   router.replace('/login')
+  // Reload to clear cached Cookies
+  location.reload()
 }
 
 const autoLogout = (expiresIn) => {

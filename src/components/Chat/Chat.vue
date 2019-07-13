@@ -33,6 +33,7 @@
                 v-model="message"
                 @keydown.enter.exact.prevent
                 @keyup.enter.exact="insertMessage"
+                :disabled="startChat"
               >
                 <a-icon slot="prefix" type="message" style="color: rgba(0,0,0,.25)" />
               </a-input>
@@ -60,6 +61,7 @@
 import { Scrolly, ScrollyViewport, ScrollyBar } from "vue-scrolly";
 import { mlHttp } from "../../../core/httpClient";
 import { initChatManager } from "../../../core/Chat/chat.services";
+import { getRoomData } from "../../../core/Chat/chat.services";
 
 export default {
   components: {
@@ -73,9 +75,10 @@ export default {
       .connect({
         onAddedToRoom: room => {
           console.log(`Added to room ${room.name}`);
-          this.startChat = false
           this.room = room;
           this.listen();
+          // this.startChat = false
+          this.getRoominfo(this.room.id)
         }
       })
       .then(currentUser => {
@@ -149,18 +152,18 @@ export default {
         roomId: this.room.id,
         hooks: {
           onMessage: message => {
-            // mlHttp
-            //   .post(
-            //     '/gsug?query=' +
-            //       message.parts[0].payload.content
-            //   )
-            //   .then(res => {
-            //     console.log(res)
-            //     this.firstAns = res.data.suggestions[0]
-            //     this.secondAns = res.data.suggestions[1]
-            //     this.thirdAns = res.data.suggestions[2]
-            //   })
-            //   .catch(err => console.log(err))
+            mlHttp
+              .post(
+                '/suggestion?query=' +
+                  message.parts[0].payload.content
+              )
+              .then(res => {
+                console.log(res)
+                this.firstAns = res.data.suggestions[0]
+                this.secondAns = res.data.suggestions[1]
+                this.thirdAns = res.data.suggestions[2]
+              })
+              .catch(err => console.log(err))
             if (message.senderId !== this.currUser.id) {
               console.log("inn if");
               this.sentMessagesArray.push({
@@ -175,6 +178,20 @@ export default {
         },
         messageLimit: 0
       });
+    },
+    getRoominfo(id) {
+      getRoomData(id)
+        .then(res => {
+          this.startChat = false
+          console.log(res)
+          this.$emit('roomData', {
+            ticketID: res.data.ticket.id,
+            createdAt: res.data.ticket.created_at,
+            clientName: res.data.client.name,
+            clientEmail: res.data.client.email
+          })
+        })
+        .catch(err => console.log(err))
     }
   }
 };

@@ -1,28 +1,32 @@
 <template>
-  <a-card :title="'Open New Ticket'">
+  <a-card :title="`Open New Ticket #${roomInfo.ticketID ? roomInfo.ticketID : ''}`">
     <a-form class="ticket-form" :form="form">
       <a-form-item>
         <a-input
-          v-decorator="['clientName', {rules: [{ required: true, message: 'Please, enter the client name!' }]}]"
+          disabled
           placeholder="Client Name"
+          :value="roomInfo.clientName"
         >
           <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-input
-          v-decorator="['clientMobile', {rules: [{ required: true, message: 'Please, enter the client mobile number!' }]}]"
-          placeholder="Client Mobile"
+          disabled
+          placeholder="Client Email"
+          :value="roomInfo.clientEmail"
         >
-          <a-icon slot="prefix" type="phone" style="color: rgba(0,0,0,.25)" />
+          <a-icon slot="prefix" type="mail" style="color: rgba(0,0,0,.25)" />
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-date-picker
-          v-decorator="['complaintDate', {rules: [{ required: true, message: 'Please, enter the date of the complaint!' }]}]"
-          style="width: 100% !important;"
-          @change="onChange"
-        />
+        <a-input
+          disabled
+          placeholder="Ticket Date"
+          :value="roomInfo.createdAt"
+        >
+          <a-icon slot="prefix" type="calendar" style="color: rgba(0,0,0,.25)" />
+        </a-input>
       </a-form-item>
       <a-form-item>
         <a-input
@@ -61,31 +65,22 @@
             html-type="submit"
             class="login-form-button"
             block
+            :disabled="roomInfo === ''"
           >Submit Complaint</a-button>
         </a-popconfirm>
       </a-form-item>
     </a-form>
   </a-card>
 </template>
-<style>
-.ant-card {
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0, 21, 41, 0.13);
-  margin-bottom: 10px;
-}
-.ant-row .ant-form-item {
-  margin-bottom: 5px;
-}
-</style>
+
 <script>
+import { updateTicket } from '../../../core/Agent/agent.services'
 export default {
+  props: ['roomInfo'],
   data() {
     return {
       form: this.$form.createForm(this),
       ticket: {
-        clientName: "",
-        clientMobile: "",
-        date: "",
         complaint: "",
         action: "",
         summary: ""
@@ -99,19 +94,24 @@ export default {
           this.ticket.complaint = values.complaint;
           this.ticket.action = values.action;
           this.ticket.summary = values.complaintSummary;
-          console.log(this.ticket);
 
-          this.$message.success("Complaint submitted successfully!"); // Success Message
-          this.$emit("receiveTicketData", this.ticket); // Sending out the information of the ticket
+          updateTicket({
+            ticketID: this.roomInfo.ticketID,
+            action: this.action,
+            complaint: this.complaint
+          })
+          .then(res => {
+            console.log(res)
+            this.$message.success("Complaint submitted successfully!"); // Success Message
+          })
+          .catch(err => console.log(err))
 
           // Clearing the fields
           this.form.resetFields();
         }
       });
     },
-    onChange(date, dateString) {
-      this.ticket.date = dateString;
-    },
+
     confirm(e) {
       this.submitComplaint();
       // Implement the feature of fetching next client here
@@ -122,3 +122,13 @@ export default {
   }
 };
 </script>
+<style>
+.ant-card {
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 21, 41, 0.13);
+  margin-bottom: 10px;
+}
+.ant-row .ant-form-item {
+  margin-bottom: 5px;
+}
+</style>

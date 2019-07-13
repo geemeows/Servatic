@@ -18,7 +18,7 @@
         <a-row>
           <!-- Start open ticket for the client complaint section -->
           <a-col :span="24">
-            <client-ticket @receiveTicketData="receiveTicket"></client-ticket>
+            <client-ticket :roomInfo="roomInfo"></client-ticket>
           </a-col>
           <!-- End open ticket for the client complaint section -->
         </a-row>
@@ -27,12 +27,34 @@
 
       <!-- Start Agent Chat Section -->
       <a-col :span="14">
-        <chat-window></chat-window>
+        <chat-window @roomData="setRoomData"></chat-window>
       </a-col>
       <!-- Start Agent Chat Section -->
     </a-row>
   </a-layout-content>
 </template>
+
+<script>
+import clientTicket from "../../components/Agent/Ticket";
+const chatWindow = () => import ("../../components/Chat/Chat")
+export default {
+  components: {
+    clientTicket,
+    chatWindow
+  },
+  data() {
+    return {
+      clientsInQueue: 10,
+      roomInfo: ''
+    };
+  },
+  methods: {
+    setRoomData(payload) {
+      this.roomInfo = payload
+    }
+  }
+};
+</script>
 
 <style>
 .queue-info {
@@ -66,36 +88,3 @@
 }
 </style>
 
-<script>
-import clientTicket from "../../components/Agent/Ticket";
-import chatWindow from "../../components/Chat/Chat";
-export default {
-  components: {
-    clientTicket,
-    chatWindow
-  },
-  data() {
-    return {
-      clientsInQueue: 10,
-      clientInfo: {
-        name: "Muhammad El-Gazouly",
-        mobile: "+201119383483"
-      },
-      ticket: {
-        date: "",
-        complaint: "",
-        action: "",
-        summary: ""
-      }
-    };
-  },
-  methods: {
-    receiveTicket(payload) {
-      this.ticket.date = payload.date;
-      this.ticket.complaint = payload.complaint;
-      this.ticket.action = payload.action;
-      this.ticket.summary = payload.summary;
-    }
-  }
-};
-</script>
