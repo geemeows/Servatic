@@ -77,7 +77,7 @@ export default {
           console.log(`Added to room ${room.name}`);
           this.room = room;
           this.listen();
-          // this.startChat = false
+          this.startChat = false
           this.getRoominfo(this.room.id)
         }
       })
@@ -182,7 +182,7 @@ export default {
     getRoominfo(id) {
       getRoomData(id)
         .then(res => {
-          this.startChat = false
+          // this.startChat = false
           console.log(res)
           this.$emit('roomData', {
             ticketID: res.data.ticket.id,

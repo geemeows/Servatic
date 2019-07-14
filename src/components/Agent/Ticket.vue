@@ -97,8 +97,8 @@ export default {
 
           updateTicket({
             ticketID: this.roomInfo.ticketID,
-            action: this.action,
-            complaint: this.complaint
+            action: this.ticket.action,
+            complaint: this.ticket.complaint
           })
           .then(res => {
             console.log(res)
