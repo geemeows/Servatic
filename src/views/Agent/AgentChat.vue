@@ -35,25 +35,25 @@
 </template>
 
 <script>
-import clientTicket from "../../components/Agent/Ticket";
-const chatWindow = () => import ("../../components/Chat/Chat")
+import clientTicket from '../../components/Agent/Ticket'
+const chatWindow = () => import('../../components/Chat/Chat')
 export default {
   components: {
     clientTicket,
     chatWindow
   },
-  data() {
+  data () {
     return {
       clientsInQueue: 10,
       roomInfo: ''
-    };
+    }
   },
   methods: {
-    setRoomData(payload) {
+    setRoomData (payload) {
       this.roomInfo = payload
     }
   }
-};
+}
 </script>
 
 <style>
@@ -87,4 +87,3 @@ export default {
   margin-bottom: 10px;
 }
 </style>
-

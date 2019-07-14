@@ -77,50 +77,50 @@
 import { updateTicket } from '../../../core/Agent/agent.services'
 export default {
   props: ['roomInfo'],
-  data() {
+  data () {
     return {
       form: this.$form.createForm(this),
       ticket: {
-        complaint: "",
-        action: "",
-        summary: ""
+        complaint: '',
+        action: '',
+        summary: ''
       }
-    };
+    }
   },
   methods: {
-    submitComplaint() {
+    submitComplaint () {
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.ticket.complaint = values.complaint;
-          this.ticket.action = values.action;
-          this.ticket.summary = values.complaintSummary;
+          this.ticket.complaint = values.complaint
+          this.ticket.action = values.action
+          this.ticket.summary = values.complaintSummary
 
           updateTicket({
             ticketID: this.roomInfo.ticketID,
             action: this.ticket.action,
             complaint: this.ticket.complaint
           })
-          .then(res => {
-            console.log(res)
-            this.$message.success("Complaint submitted successfully!"); // Success Message
-          })
-          .catch(err => console.log(err))
+            .then(res => {
+              console.log(res)
+              this.$message.success('Complaint submitted successfully!') // Success Message
+            })
+            .catch(err => console.log(err))
 
           // Clearing the fields
-          this.form.resetFields();
+          this.form.resetFields()
         }
-      });
+      })
     },
 
-    confirm(e) {
-      this.submitComplaint();
+    confirm (e) {
+      this.submitComplaint()
       // Implement the feature of fetching next client here
     },
-    cancel(e) {
-      this.submitComplaint();
+    cancel (e) {
+      this.submitComplaint()
     }
   }
-};
+}
 </script>
 <style>
 .ant-card {

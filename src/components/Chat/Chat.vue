@@ -58,10 +58,9 @@
 </template>
 
 <script>
-import { Scrolly, ScrollyViewport, ScrollyBar } from "vue-scrolly";
-import { mlHttp } from "../../../core/httpClient";
-import { initChatManager } from "../../../core/Chat/chat.services";
-import { getRoomData } from "../../../core/Chat/chat.services";
+import { Scrolly, ScrollyViewport, ScrollyBar } from 'vue-scrolly'
+import { mlHttp } from '../../../core/httpClient'
+import { initChatManager, getRoomData } from '../../../core/Chat/chat.services'
 
 export default {
   components: {
@@ -69,57 +68,57 @@ export default {
     ScrollyViewport,
     ScrollyBar
   },
-  created() {
-    const chatManager = initChatManager;
+  created () {
+    const chatManager = initChatManager
     chatManager
       .connect({
         onAddedToRoom: room => {
-          console.log(`Added to room ${room.name}`);
-          this.room = room;
-          this.listen();
+          console.log(`Added to room ${room.name}`)
+          this.room = room
+          this.listen()
           this.startChat = false
           this.getRoominfo(this.room.id)
         }
       })
       .then(currentUser => {
-        this.currUser = currentUser;
-        console.log("Successful connection", currentUser);
+        this.currUser = currentUser
+        console.log('Successful connection', currentUser)
       })
       .catch(err => {
-        console.log("Error on connection", err);
-      });
+        console.log('Error on connection', err)
+      })
   },
-  mounted() {
+  mounted () {
     // This function makes the chat scrollbar scrolles down instantaneously
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       window.setInterval(() => {
-        let scroll = this.$el.querySelector(".test");
-        if (scroll.scrollTop !== 0) this.scrollTop();
-      }, 0);
-    });
+        let scroll = this.$el.querySelector('.test')
+        if (scroll.scrollTop !== 0) this.scrollTop()
+      }, 0)
+    })
   },
-  data() {
+  data () {
     return {
       form: this.$form.createForm(this),
-      message: "",
-      time: "10:30 PM",
+      message: '',
+      time: '10:30 PM',
       sentMessagesArray: [],
-      firstAns: "The First Ans",
-      secondAns: "The Second Ans",
-      thirdAns: "The Third Ans",
+      firstAns: 'The First Ans',
+      secondAns: 'The Second Ans',
+      thirdAns: 'The Third Ans',
       currUser: null,
       room: null,
       startChat: true
-    };
+    }
   },
   methods: {
-    insertMessage() {
-      if (this.message !== "") {
+    insertMessage () {
+      if (this.message !== '') {
         this.sentMessagesArray.push({
-          type: "sent",
+          type: 'sent',
           message: this.message,
           time: this.time
-        });
+        })
       }
       this.currUser
         .sendSimpleMessage({
@@ -127,27 +126,27 @@ export default {
           text: this.message
         })
         .then(messageId => {
-          if (this.message !== "") {
+          if (this.message !== '') {
             this.sentMessagesArray.push({
-            id: messageId,
-              type: "sent",
+              id: messageId,
+              type: 'sent',
               message: this.message,
               time: this.time
-            });
+            })
           }
         })
         .catch(err => {
-          console.log(`Error adding message to ${this.room.name}: ${err}`);
-        });
+          console.log(`Error adding message to ${this.room.name}: ${err}`)
+        })
 
-      this.scrollTop();
-      this.message = "";
+      this.scrollTop()
+      this.message = ''
     },
-    scrollTop() {
-      let scrollToBottom = this.$el.querySelector(".test");
-      scrollToBottom.scrollTop = scrollToBottom.scrollHeight;
+    scrollTop () {
+      let scrollToBottom = this.$el.querySelector('.test')
+      scrollToBottom.scrollTop = scrollToBottom.scrollHeight
     },
-    listen() {
+    listen () {
       this.currUser.subscribeToRoomMultipart({
         roomId: this.room.id,
         hooks: {
@@ -165,21 +164,21 @@ export default {
               })
               .catch(err => console.log(err))
             if (message.senderId !== this.currUser.id) {
-              console.log("inn if");
+              console.log('inn if')
               this.sentMessagesArray.push({
                 id: message.id,
-                type: "received",
+                type: 'received',
                 message: message.parts[0].payload.content,
                 time: this.time
-              });
+              })
             }
-            console.log("received message", message);
+            console.log('received message', message)
           }
         },
         messageLimit: 0
-      });
+      })
     },
-    getRoominfo(id) {
+    getRoominfo (id) {
       getRoomData(id)
         .then(res => {
           // this.startChat = false
@@ -194,7 +193,7 @@ export default {
         .catch(err => console.log(err))
     }
   }
-};
+}
 </script>
 
 <style scoped>

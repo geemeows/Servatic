@@ -44,16 +44,14 @@
 </template>
 <script>
 import addAgentForm from '../../components/Moderator/AddAgent'
-import { addAgent } from '../../../core/Moderator/moderator.services'
-import { getCompanyAgents } from '../../../core/Moderator/moderator.services'
+import { addAgent, getCompanyAgents, deleteAgent } from '../../../core/Moderator/moderator.services'
 import { formatAgent } from '../../../core/Moderator/moderator.model'
-import { deleteAgent } from '../../../core/Moderator/moderator.services'
 
 export default {
   components: {
     addAgentForm
   },
-  created() {
+  created () {
     this.isLoading = true
     getCompanyAgents()
       .then(res => {
@@ -108,7 +106,7 @@ export default {
         .then(res => {
           console.log(res)
           this.isLoading = false
-          this.$message.success("Agent Deleted Successfully!")
+          this.$message.success('Agent Deleted Successfully!')
 
           const dataSource = [...this.dataSource]
           this.dataSource = dataSource.filter(item => item.key !== key)
@@ -116,8 +114,8 @@ export default {
         .catch(err => {
           console.log(err)
           this.isLoading = false
-          this.$message.error("Deleting Agent Failed!")
-        }) 
+          this.$message.error('Deleting Agent Failed!')
+        })
       // const dataSource = [...this.dataSource]
       // this.dataSource = dataSource.filter(item => item.key !== key)
     },
@@ -142,12 +140,12 @@ export default {
             busy: res.data.busy ? 'Busy' : 'Available',
             email: payload.email
           })
-          this.$message.success("Registeration Completed!");
+          this.$message.success('Registeration Completed!')
         })
         .catch(err => {
           this.isLoading = false
           this.onClose()
-          this.$message.error("Registeration Failed!");
+          this.$message.error('Registeration Failed!')
           console.log(err)
         })
     }

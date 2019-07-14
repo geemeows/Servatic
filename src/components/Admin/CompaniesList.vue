@@ -66,62 +66,62 @@
 
 <script>
 export default {
-  props: ["isLoading", "companies"],
-  created() {
+  props: ['isLoading', 'companies'],
+  created () {
     this.companiesList = this.getCompanies
   },
   computed: {
-    getCompanies() {
+    getCompanies () {
       return this.companies
     }
   },
-  data() {
+  data () {
     return {
       companiesList: [],
       searchText: '',
       searchInput: null,
       columns: [
         {
-          title: "Company Name",
-          dataIndex: "companyName",
-          width: "40%",
+          title: 'Company Name',
+          dataIndex: 'companyName',
+          width: '40%',
           scopedSlots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
-            customRender: 'customRender',
+            customRender: 'customRender'
           },
           onFilter: (value, record) => record.name.toLowerCase().includes(value.toLowerCase()),
           onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
               setTimeout(() => {
                 this.searchInput.focus()
-              },0)
+              }, 0)
             }
           }
         },
         {
-          title: "Added At",
-          dataIndex: "addedAt",
-          width: "40%"
+          title: 'Added At',
+          dataIndex: 'addedAt',
+          width: '40%'
         },
         {
-          title: "Delete",
-          width: "20%",
-          dataIndex: "actions",
-          scopedSlots: { customRender: "delete" }
+          title: 'Delete',
+          width: '20%',
+          dataIndex: 'actions',
+          scopedSlots: { customRender: 'delete' }
         }
       ]
-    };
+    }
   },
   methods: {
-    onDelete(key) {
-      const companiesList = [...this.getCompanies];
-      const updatedList = companiesList.filter(item => item.key !== key);
-      const deletedItem = companiesList.filter(item => item.key == key);
+    onDelete (key) {
+      const companiesList = [...this.getCompanies]
+      const updatedList = companiesList.filter(item => item.key !== key)
+      const deletedItem = companiesList.filter(item => item.key === key)
       this.$emit('updateCompaniesList', {
         deletedItem: deletedItem[0].key,
         updatedList
-        })
+      })
     },
     handleSearch (selectedKeys, confirm) {
       confirm()
@@ -131,9 +131,9 @@ export default {
     handleReset (clearFilters) {
       clearFilters()
       this.searchText = ''
-    },
+    }
   }
-};
+}
 </script>
 
 <style>

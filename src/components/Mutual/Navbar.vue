@@ -42,7 +42,7 @@ export default {
     getEmail () {
       return Cookies.get('userEmail')
     },
-    getCompanyName() {
+    getCompanyName () {
       return Cookies.get('companyName')
     }
   },

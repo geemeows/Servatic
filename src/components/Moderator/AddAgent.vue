@@ -51,34 +51,34 @@
 </template>
 <script>
 export default {
-  props:['loading'],
-  data() {
+  props: ['loading'],
+  data () {
     return {
       form: this.$form.createForm(this),
       agentData: {
-        name: "",
-        email: "",
-        username: "",
-        password: ""
+        name: '',
+        email: '',
+        username: '',
+        password: ''
       }
-    };
+    }
   },
   methods: {
-    handleSubmit(e) {
-      e.preventDefault();
+    handleSubmit (e) {
+      e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.agentData.name = values.agentName;
-          this.agentData.email = values.agentEmail;
-          this.agentData.password = values.agentPassword;
+          this.agentData.name = values.agentName
+          this.agentData.email = values.agentEmail
+          this.agentData.password = values.agentPassword
 
-          this.$emit("agentData", this.agentData);
+          this.$emit('agentData', this.agentData)
           // this.form.resetFields();
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 <style lang="">
 </style>
