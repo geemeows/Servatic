@@ -1,8 +1,12 @@
 import axios from 'axios'
 
 export const serverHttp = axios.create({
-  // baseURL: 'https://servatica.herokuapp.com/api'
-  baseURL: 'http://servatica.herokuapp.com/api'
+  baseURL: 'https://servatica.herokuapp.com/api',
+  // baseURL: 'http://servatica.herokuapp.com/api',
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json'
+  }
 })
 
 export const mlHttp = axios.create({
