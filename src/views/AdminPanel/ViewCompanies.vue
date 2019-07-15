@@ -25,7 +25,11 @@ export default {
       })
       .catch(err => {
         this.isLoading = false
-        console.log(err)
+        this.$notification.open({
+          message: 'Somthing Went Wrong',
+          description: `${err.message}`,
+          icon: <a-icon type="close" style="color:#c10000" />
+        })
       })
   },
   components: {
@@ -42,11 +46,21 @@ export default {
       this.isLoading = true
       removeCompany(payload.deletedItem)
         .then((res) => {
-          console.log(res)
           this.isLoading = false
           this.companies = payload.updatedList
+          this.$notification.open({
+            message: 'Companies List Updated',
+            description: 'You updated companies successfully!',
+            icon: <a-icon type="check" style="color:#00c610" />
+          })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          this.$notification.open({
+            message: 'Somthing Went Wrong',
+            description: `${err.message}`,
+            icon: <a-icon type="close" style="color:#c10000" />
+          })
+        })
     }
   }
 }

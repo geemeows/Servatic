@@ -72,8 +72,12 @@ export default {
             this.isLoading = false
           })
             .catch(err => {
-              console.log(err)
               this.isLoading = false
+              this.$notification.open({
+                message: 'Somthing Went Wrong',
+                description: `${err.message}`,
+                icon: <a-icon type="close" style="color:#c10000" />
+              })
             })
         }
       })

@@ -11,6 +11,7 @@ export const saveUserInfo = (payload, email, expiresIn) => {
   Cookies.set('token', payload.access_token)
   Cookies.set('expireDate', expiresIn)
   Cookies.set('accountType', payload.model.type)
+  Cookies.set('userID', payload.model.user_id)
   Cookies.set('userEmail', email)
   if (payload.model.type !== 'admin') {
     Cookies.set('companyID', payload.model.company_id)
@@ -24,6 +25,7 @@ export const removeUserInfo = () => {
   Cookies.remove('expireDate')
   Cookies.remove('accountType')
   Cookies.remove('userEmail')
+  Cookies.remove('userID')
   if (Cookies.get('companyID')) Cookies.remove('companyID')
   if (Cookies.get('companyName')) Cookies.remove('companyName')
 }

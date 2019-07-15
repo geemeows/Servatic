@@ -65,12 +65,8 @@
 </template>
 
 <script>
-import Cookies from 'vue-cookies'
 export default {
   props: ['isLoading', 'companies'],
-  beforeCreate () {
-    console.log('beforeCreate (CompaniesList): ', Cookies.get('token'))
-  },
   created () {
     this.companiesList = this.getCompanies
   },

@@ -49,6 +49,20 @@ export default {
   methods: {
     signOut () {
       logout()
+        .then(() => {
+          this.$notification.open({
+            message: 'Successfully Logged Out',
+            description: 'You have logged out successfully. See you Soon',
+            icon: <a-icon type="check" style="color:#00c610" />
+          })
+        })
+        .catch(err => {
+          this.$notification.open({
+            message: 'Somthing Went Wrong',
+            description: `${err.message}`,
+            icon: <a-icon type="close" style="color:#c10000" />
+          })
+        })
     }
   }
 }

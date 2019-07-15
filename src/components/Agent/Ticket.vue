@@ -101,7 +101,11 @@ export default {
             complaint: this.ticket.complaint
           })
             .then(res => {
-              this.$message.success('Complaint submitted successfully!') // Success Message
+              this.$notification.open({
+                message: 'Ticket Created',
+                description: 'You have created ticket successfully.',
+                icon: <a-icon type="check" style="color:#00c610" />
+              })
               this.isLoading = false
 
               // Clearing the fields
@@ -110,7 +114,13 @@ export default {
               // Clear room info
               this.roomData = ''
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+              this.$notification.open({
+                message: 'Somthing Went Wrong',
+                description: `${err.message}`,
+                icon: <a-icon type="close" style="color:#c10000" />
+              })
+            })
         }
       })
     },

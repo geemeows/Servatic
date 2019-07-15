@@ -63,7 +63,11 @@ export default {
       })
       .catch(err => {
         this.isLoading = false
-        console.log(err)
+        this.$notification.open({
+          message: 'Somthing Went Wrong',
+          description: `${err.message}`,
+          icon: <a-icon type="close" style="color:#c10000" />
+        })
       })
   },
   data () {
@@ -104,17 +108,23 @@ export default {
       this.isLoading = true
       deleteAgent(key)
         .then(res => {
-          console.log(res)
           this.isLoading = false
-          this.$message.success('Agent Deleted Successfully!')
+          this.$notification.open({
+            message: 'Deleting Agent Succeeded',
+            description: 'You deleted an agent successfully!',
+            icon: <a-icon type="check" style="color:#00c610" />
+          })
 
           const dataSource = [...this.dataSource]
           this.dataSource = dataSource.filter(item => item.key !== key)
         })
         .catch(err => {
-          console.log(err)
           this.isLoading = false
-          this.$message.error('Deleting Agent Failed!')
+          this.$notification.open({
+            message: 'Somthing Went Wrong',
+            description: `${err.message}`,
+            icon: <a-icon type="close" style="color:#c10000" />
+          })
         })
       // const dataSource = [...this.dataSource]
       // this.dataSource = dataSource.filter(item => item.key !== key)
@@ -140,13 +150,20 @@ export default {
             busy: res.data.busy ? 'Busy' : 'Available',
             email: payload.email
           })
-          this.$message.success('Registeration Completed!')
+          this.$notification.open({
+            message: 'Registeration Succeeded',
+            description: 'You added a new agent successfully!',
+            icon: <a-icon type="check" style="color:#00c610" />
+          })
         })
         .catch(err => {
           this.isLoading = false
           this.onClose()
-          this.$message.error('Registeration Failed!')
-          console.log(err)
+          this.$notification.open({
+            message: 'Somthing Went Wrong',
+            description: `${err.message}`,
+            icon: <a-icon type="close" style="color:#c10000" />
+          })
         })
     }
   }

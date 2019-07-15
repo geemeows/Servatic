@@ -38,10 +38,9 @@ export default {
         })
         .catch(err => {
           this.isLoading = false
-          console.log(err)
           this.$notification.open({
             message: 'Somthing Went Wrong',
-            description: 'Company and moderator are not added.',
+            description: `${err.message}`,
             icon: <a-icon type="close" style="color:#c10000" />
           })
         })

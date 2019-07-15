@@ -84,6 +84,11 @@ export default {
           this.listen()
           this.startChat = false
           console.log('Room ID', this.room.id, this.room)
+          this.$notification.open({
+            message: 'New Client',
+            description: 'New Client added to the chatting area',
+            icon: <a-icon type="plus" style="color:#00c610" />
+          })
           this.getRoominfo(this.room.id)
 
           // Setting Cookies
@@ -215,7 +220,13 @@ export default {
             clientEmail: res.data.client.email
           })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          this.$notification.open({
+            message: 'Somthing Went Wrong',
+            description: `${err.message}`,
+            icon: <a-icon type="close" style="color:#c10000" />
+          })
+        })
     },
     calcAccuracy (payload) {
       let sum = 0

@@ -1,14 +1,21 @@
 import { serverHttp } from '../httpClient'
 import router from '../../src/router'
 import { expireDate, saveUserInfo, removeUserInfo } from './auth.model'
+import Cookies from 'vue-cookies'
 
 export const logout = () => {
-  // Delete Cookies Items
-  removeUserInfo()
-  // Update The Route
-  router.replace('/login')
-  // Reload to clear cached Cookies
-  location.reload()
+  const userID = Cookies.get('userID')
+  return serverHttp.post('/logout', {
+    user_id: userID
+  })
+    .then(() => {
+      // Delete Cookies Items
+      removeUserInfo()
+      // Update The Route
+      router.replace('/login')
+      // Reload to clear cached Cookies
+      location.reload()
+    })
 }
 
 const autoLogout = (expiresIn) => {
