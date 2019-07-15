@@ -1,11 +1,9 @@
 import { serverHttp } from '../httpClient'
 import Cookies from 'vue-cookies'
 
-const token = Cookies.get('token')
-// eslint-disable-next-line camelcase
-const companyID = Cookies.get('companyID')
-
 export const addAgent = (payload) => {
+  const token = Cookies.get('token')
+  const companyID = Cookies.get('companyID')
   return serverHttp.post('/agents', {
     name: payload.name,
     email: payload.email,
@@ -16,6 +14,8 @@ export const addAgent = (payload) => {
 }
 
 export const getCompanyAgents = () => {
+  const token = Cookies.get('token')
+  const companyID = Cookies.get('companyID')
   return serverHttp.get(`/agents/company/${companyID}`, {
     params: {
       token
@@ -24,6 +24,7 @@ export const getCompanyAgents = () => {
 }
 
 export const deleteAgent = (id) => {
+  const token = Cookies.get('token')
   return serverHttp.delete(`/agents/${id}`, {
     params: {
       token

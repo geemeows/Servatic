@@ -2,9 +2,8 @@ import { serverHttp } from '../httpClient'
 import { formatCompanies } from './admin.model'
 import Cookies from 'vue-cookies'
 
-const token = Cookies.get('token')
-
 export const addCompany = (payload) => {
+  const token = Cookies.get('token')
   return serverHttp
     .post('/companies', {
       name: payload.companyName,
@@ -17,6 +16,7 @@ export const addCompany = (payload) => {
 }
 
 export const removeCompany = (id) => {
+  const token = Cookies.get('token')
   return serverHttp
     .delete(`/companies/${id}`, {
       params: {
@@ -26,6 +26,7 @@ export const removeCompany = (id) => {
 }
 
 const addModerator = (payload, companyID) => {
+  const token = Cookies.get('token')
   serverHttp.post('/moderators', {
     name: payload.moderatorName,
     email: payload.moderatorEmail,
@@ -37,6 +38,7 @@ const addModerator = (payload, companyID) => {
 }
 
 export const viewCompanies = () => {
+  const token = Cookies.get('token')
   return serverHttp.get('/companies', {
     params: {
       token

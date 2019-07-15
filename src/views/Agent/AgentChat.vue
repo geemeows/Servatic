@@ -36,15 +36,28 @@
 
 <script>
 import clientTicket from '../../components/Agent/Ticket'
+import { getQueue } from '../../../core/Agent/agent.services'
+import { setInterval } from 'timers'
 const chatWindow = () => import('../../components/Chat/Chat')
 export default {
   components: {
     clientTicket,
     chatWindow
   },
+  created () {
+    getQueue().then(res => {
+      this.clientsInQueue = res.data[0].client_in_queue
+    })
+
+    setInterval(() => {
+      getQueue().then(res => {
+        this.clientsInQueue = res.data[0].client_in_queue
+      })
+    }, 30 * 1000)
+  },
   data () {
     return {
-      clientsInQueue: 10,
+      clientsInQueue: 0,
       roomInfo: ''
     }
   },

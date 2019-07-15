@@ -13,7 +13,7 @@ import companiesList from '../../components/Admin/CompaniesList'
 import Cookies from 'vue-cookies'
 export default {
   beforeCreate () {
-    console.log('beforeCreate lifecycle: ', Cookies.get('token'))
+    console.log('beforeCreate (ViewCompanies) lifecycle: ', Cookies.get('token'))
   },
   created () {
     console.log('create lifecycle: ', Cookies.get('token'))

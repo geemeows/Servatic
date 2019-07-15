@@ -1,14 +1,14 @@
 <template>
   <a-card class="chat-window" title="Chatting Area">
     <div class="chat-box">
-      <scrolly class="vertical-scrollbar-demo" :passive-scroll="true" :style="{height: '266px' }">
+      <scrolly class="vertical-scrollbar-demo" :passive-scroll="true" :style="{height: '304px' }">
         <scrolly-viewport class="test">
           <div class="chat-messages">
             <!-- sent / received are the classes of the sent and received messages -->
             <div v-for="message in sentMessagesArray" :key="message.id">
               <div :class="message.type">
                 <div class="content">{{message.message}}</div>
-                <div class="time">{{message.time}}</div>
+                <div class="time"><a-icon type="clock-circle" />&nbsp;{{message.time}}</div>
               </div>
               <div class="clearfix"></div>
             </div>
@@ -19,9 +19,13 @@
     </div>
     <div class="chat-toolbox">
       <div class="suggestions">
-        <div class="first" @click="message=firstAns">{{firstAns}}</div>
-        <div class="second" @click="message=secondAns">{{secondAns}}</div>
-        <div class="third" @click="message=thirdAns">{{thirdAns}}</div>
+        <a-collapse defaultActiveKey="0" :bordered="false">
+          <a-collapse-panel header="Need help? Click to show some suggestions" key="1">
+            <div class="first" @click="setMessage(firstAns)">{{firstAns}}</div>
+            <div class="second" @click="setMessage(secondAns)">{{secondAns}}</div>
+            <div class="third" @click="setMessage(thirdAns)">{{thirdAns}}</div>
+          </a-collapse-panel>
+        </a-collapse>
       </div>
       <a-form :form="form" class="message-form" @submit.prevent>
         <a-row :gutter="16">
@@ -61,6 +65,7 @@
 import { Scrolly, ScrollyViewport, ScrollyBar } from 'vue-scrolly'
 import { mlHttp } from '../../../core/httpClient'
 import { initChatManager, getRoomData } from '../../../core/Chat/chat.services'
+import Cookies from 'vue-cookies'
 
 export default {
   components: {
@@ -75,9 +80,15 @@ export default {
         onAddedToRoom: room => {
           console.log(`Added to room ${room.name}`)
           this.room = room
+          this.sentMessagesArray = []
           this.listen()
           this.startChat = false
+          console.log('Room ID', this.room.id, this.room)
           this.getRoominfo(this.room.id)
+
+          // Setting Cookies
+          Cookies.set('accuracy', 0)
+          Cookies.set('roomID', this.room.id)
         }
       })
       .then(currentUser => {
@@ -103,21 +114,40 @@ export default {
       message: '',
       time: '10:30 PM',
       sentMessagesArray: [],
-      firstAns: 'The First Ans',
-      secondAns: 'The Second Ans',
-      thirdAns: 'The Third Ans',
+      firstAns: 'The First Answer',
+      secondAns: 'The Second Answer',
+      thirdAns: 'The Third Answer',
       currUser: null,
       room: null,
-      startChat: true
+      startChat: true,
+      accuracy: 0
+    }
+  },
+  watch: {
+    'accuracy': {
+      handler (payload) {
+        // Do Accuracy
+        this.calcAccuracy(payload)
+      },
+      immediate: true
     }
   },
   methods: {
+    setMessage (payload) {
+      this.message = payload
+      this.accuracy++
+    },
     insertMessage () {
       if (this.message !== '') {
+        let time = new Date()
         this.sentMessagesArray.push({
           type: 'sent',
           message: this.message,
-          time: this.time
+          time: `${
+            time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
+          }:${
+            time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
+          }`
         })
       }
       this.currUser
@@ -126,14 +156,7 @@ export default {
           text: this.message
         })
         .then(messageId => {
-          if (this.message !== '') {
-            this.sentMessagesArray.push({
-              id: messageId,
-              type: 'sent',
-              message: this.message,
-              time: this.time
-            })
-          }
+          // Do nothing
         })
         .catch(err => {
           console.log(`Error adding message to ${this.room.name}: ${err}`)
@@ -152,10 +175,7 @@ export default {
         hooks: {
           onMessage: message => {
             mlHttp
-              .post(
-                '/suggestion?query=' +
-                  message.parts[0].payload.content
-              )
+              .post('/suggestion?query=' + message.parts[0].payload.content)
               .then(res => {
                 console.log(res)
                 this.firstAns = res.data.suggestions[0]
@@ -164,12 +184,18 @@ export default {
               })
               .catch(err => console.log(err))
             if (message.senderId !== this.currUser.id) {
-              console.log('inn if')
+              let time = new Date()
               this.sentMessagesArray.push({
                 id: message.id,
                 type: 'received',
                 message: message.parts[0].payload.content,
-                time: this.time
+                time: `${
+                  time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
+                }:${
+                  time.getMinutes() < 10
+                    ? '0' + time.getMinutes()
+                    : time.getMinutes()
+                }`
               })
             }
             console.log('received message', message)
@@ -181,7 +207,6 @@ export default {
     getRoominfo (id) {
       getRoomData(id)
         .then(res => {
-          // this.startChat = false
           console.log(res)
           this.$emit('roomData', {
             ticketID: res.data.ticket.id,
@@ -191,6 +216,14 @@ export default {
           })
         })
         .catch(err => console.log(err))
+    },
+    calcAccuracy (payload) {
+      let sum = 0
+      let receivedMsgs = []
+      receivedMsgs = this.sentMessagesArray.filter(item => item.type === 'sent')
+      console.log(receivedMsgs)
+      sum = payload / (receivedMsgs.length + 1)
+      Cookies.set('accuracy', sum)
     }
   }
 }
@@ -202,7 +235,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 21, 41, 0.13);
 }
 .chat-box {
-  height: 269px;
+  height: 307px;
 }
 .chat-box::before {
   content: "";
@@ -273,9 +306,8 @@ export default {
 }
 .suggestions {
   padding-top: 5px;
-  /* margin-bottom: 20px; */
 }
-.suggestions div {
+.suggestions .first, .suggestions .second, .suggestions .third{
   padding: 2px 10px;
   /* float: left;
   width: 181px; */
@@ -289,7 +321,7 @@ export default {
   word-wrap: break-word;
   height: 100%;
 }
-.suggestions div:hover {
+.suggestions .first:hover, .suggestions .second:hover, .suggestions .third:hover {
   background: #40a9ff;
   cursor: pointer !important;
   color: white;
