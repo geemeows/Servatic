@@ -8,7 +8,15 @@
             <div v-for="message in sentMessagesArray" :key="message.id">
               <div :class="message.type">
                 <div class="content">{{message.message}}</div>
-                <div class="time"><a-icon type="clock-circle" />&nbsp;{{message.time}}</div>
+                <div class="time">
+                  <a-icon style="color: #00c610;" v-if="message.type==='sent'" type="check" />
+                  <a-icon
+                    style="margin-left:-8px; color: #00c610;"
+                    v-if="message.type==='sent'"
+                    type="check"
+                  />
+                  {{message.time}}
+                </div>
               </div>
               <div class="clearfix"></div>
             </div>
@@ -68,6 +76,7 @@ import { initChatManager, getRoomData } from '../../../core/Chat/chat.services'
 import Cookies from 'vue-cookies'
 
 export default {
+  props: ['submitTicketFlag'],
   components: {
     Scrolly,
     ScrollyViewport,
@@ -125,14 +134,30 @@ export default {
       currUser: null,
       room: null,
       startChat: true,
-      accuracy: 0
+      accuracy: 0,
+      accuracyFlag: false,
+      endChat: null
     }
   },
   watch: {
-    'accuracy': {
+    accuracy: {
       handler (payload) {
         // Do Accuracy
         this.calcAccuracy(payload)
+      },
+      immediate: true
+    },
+    submitTicketFlag: {
+      handler (payload) {
+        this.endChat = payload
+        this.sentMessagesArray = []
+        this.endChat = false
+        if (this.currUser) {
+          this.currUser.sendSimpleMessage({
+            roomId: this.room.id,
+            text: 'b31e3b4a279d8922c52e1c675bbe8872'
+          })
+        }
       },
       immediate: true
     }
@@ -140,9 +165,14 @@ export default {
   methods: {
     setMessage (payload) {
       this.message = payload
-      this.accuracy++
+      this.accuracyFlag = true
+      // this.accuracy++
     },
     insertMessage () {
+      if (this.accuracyFlag) {
+        this.accuracy++
+        this.accuracyFlag = false
+      }
       if (this.message !== '') {
         let time = new Date()
         this.sentMessagesArray.push({
@@ -179,8 +209,20 @@ export default {
         roomId: this.room.id,
         hooks: {
           onMessage: message => {
+            const messageContent = message.parts[0].payload.content
+            if (messageContent === 'b31e3b4a279d8922c52e1c675bbe8872') {
+              if (message.senderId !== this.currUser.id) {
+                this.$notification.open({
+                  message: 'Client Left',
+                  description: 'Your client is just left!',
+                  icon: <a-icon type="info-circle" style="color:#5BC0DE" />
+                })
+              }
+              this.sentMessagesArray = []
+              return
+            }
             mlHttp
-              .post('/suggestion?query=' + message.parts[0].payload.content)
+              .post('/suggestion?query=' + messageContent)
               .then(res => {
                 console.log(res)
                 this.firstAns = res.data.suggestions[0]
@@ -193,7 +235,7 @@ export default {
               this.sentMessagesArray.push({
                 id: message.id,
                 type: 'received',
-                message: message.parts[0].payload.content,
+                message: messageContent,
                 time: `${
                   time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
                 }:${
@@ -231,7 +273,9 @@ export default {
     calcAccuracy (payload) {
       let sum = 0
       let receivedMsgs = []
-      receivedMsgs = this.sentMessagesArray.filter(item => item.type === 'sent')
+      receivedMsgs = this.sentMessagesArray.filter(
+        item => item.type === 'sent'
+      )
       console.log(receivedMsgs)
       sum = payload / (receivedMsgs.length + 1)
       Cookies.set('accuracy', sum)
@@ -318,7 +362,9 @@ export default {
 .suggestions {
   padding-top: 5px;
 }
-.suggestions .first, .suggestions .second, .suggestions .third{
+.suggestions .first,
+.suggestions .second,
+.suggestions .third {
   padding: 2px 10px;
   /* float: left;
   width: 181px; */
@@ -332,7 +378,9 @@ export default {
   word-wrap: break-word;
   height: 100%;
 }
-.suggestions .first:hover, .suggestions .second:hover, .suggestions .third:hover {
+.suggestions .first:hover,
+.suggestions .second:hover,
+.suggestions .third:hover {
   background: #40a9ff;
   cursor: pointer !important;
   color: white;

@@ -25,7 +25,7 @@
         </router-link>
       </a-menu-item>
 
-      <a-menu-item key="4" v-if="getAccountType !== 'admin'">
+      <a-menu-item key="4" v-if="getAccountType === 'agent'">
         <router-link to="/agent-chat">
           <a-icon type="message"/>
           <span>Start Chatting</span>

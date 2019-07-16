@@ -54,12 +54,12 @@
             <a-row>
               <a-col :span="10">
                 <div class="card-icon">
-                  <a-icon type="user" />
+                  <a-icon type="clock-circle" />
                 </div>
               </a-col>
               <a-col :span="14">
                 <div class="card-info">
-                  <span class="title">#Clients / Min</span>
+                  <span class="title">Avg. Response Time (min)</span>
                   <span class="value">22</span>
                 </div>
               </a-col>

@@ -111,6 +111,8 @@ export default {
               // Clearing the fields
               this.form.resetFields()
 
+              this.$emit('submitTicket', true)
+
               // Clear room info
               this.roomData = ''
             })

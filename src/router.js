@@ -67,7 +67,7 @@ const router = new Router({
       beforeEnter (to, from, next) {
         token = Cookies.get('token')
         accountType = Cookies.get('accountType')
-        if (token && (accountType === 'moderator' || accountType === 'agent')) next()
+        if (token && (accountType === 'agent')) next()
         else next('/404')
       }
     },
