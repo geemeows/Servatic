@@ -10,6 +10,7 @@ export const serverHttp = axios.create({
 })
 
 export const mlHttp = axios.create({
-  baseURL: 'https://195.246.57.111:5557'
+  // baseURL: 'https://195.246.57.111:5557'
+  baseURL: 'https://servatic-ml-client.herokuapp.com'
   // baseURL: 'http://172.16.220.220:5557'
 })
