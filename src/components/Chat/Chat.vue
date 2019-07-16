@@ -8,7 +8,7 @@
             <div v-for="message in sentMessagesArray" :key="message.id">
               <div :class="message.type">
                 <div class="content">{{message.message}}</div>
-                <div class="time"><a-icon type="clock-circle" />&nbsp;{{message.time}}</div>
+                <div class="time"><a-icon style="color: #00c610;" v-if="message.type==='sent'" type="check" /><a-icon style="margin-left:-8px; color: #00c610;" v-if="message.type==='sent'" type="check" />{{message.time}}</div>
               </div>
               <div class="clearfix"></div>
             </div>

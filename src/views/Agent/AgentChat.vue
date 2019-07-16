@@ -6,13 +6,35 @@
     <a-row :gutter="32">
       <!-- Start Client Info and Ticket Section  -->
       <a-col :span="24">
-        <a-alert
-          message="Queue Status"
-          :description="'Be aware that the number of clients waiting in the queue: ' + clientsInQueue"
-          type="info"
-          class="queue-info"
-          showIcon
-        />
+        <a-row :gutter="32">
+          <a-col :span="20">
+            <a-alert
+              message="Queue Status"
+              :description="'Be aware that the number of clients waiting in the queue: ' + clientsInQueue"
+              type="info"
+              class="queue-info"
+              showIcon
+            />
+          </a-col>
+          <a-col :span="4">
+            <a-button style="margin-bottom: 15px;" type="primary" block>
+              <a-icon type="redo" />&nbsp;Fetch Client
+            </a-button>
+            <a-button @click="() => showTickets = true" style="background:#001529; color: #fff" block>
+              <a-icon type="file-done" />&nbsp;Closed Tickets
+            </a-button>
+            <a-modal
+              title="Closed Tickets"
+              style="top: 20px;"
+              :visible="showTickets"
+              :footer="false"
+              :width = "900"
+              @cancel="() => hideModal(false)"
+            >
+            <tickets-table></tickets-table>
+            </a-modal>
+          </a-col>
+        </a-row>
       </a-col>
       <a-col :span="10">
         <a-row>
@@ -38,11 +60,13 @@
 import clientTicket from '../../components/Agent/Ticket'
 import { getQueue } from '../../../core/Agent/agent.services'
 import { setInterval } from 'timers'
+import TicketsTable from '../../components/Agent/TicketsTable'
 const chatWindow = () => import('../../components/Chat/Chat')
 export default {
   components: {
     clientTicket,
-    chatWindow
+    chatWindow,
+    TicketsTable
   },
   created () {
     getQueue().then(res => {
@@ -58,12 +82,16 @@ export default {
   data () {
     return {
       clientsInQueue: 0,
-      roomInfo: ''
+      roomInfo: '',
+      showTickets: false
     }
   },
   methods: {
     setRoomData (payload) {
       this.roomInfo = payload
+    },
+    hideModal(payload) {
+      this.showTickets = payload
     }
   }
 }
