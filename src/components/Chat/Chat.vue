@@ -68,6 +68,7 @@ import { initChatManager, getRoomData } from '../../../core/Chat/chat.services'
 import Cookies from 'vue-cookies'
 
 export default {
+  props: ['submitTicketFlag'],
   components: {
     Scrolly,
     ScrollyViewport,
@@ -125,7 +126,9 @@ export default {
       currUser: null,
       room: null,
       startChat: true,
-      accuracy: 0
+      accuracy: 0,
+      accuracyFlag: false,
+      endChat: false
     }
   },
   watch: {
@@ -135,14 +138,25 @@ export default {
         this.calcAccuracy(payload)
       },
       immediate: true
+    },
+    'submitTicketFlag': {
+      handler (payload) {
+        this.endChat = payload
+      },
+      immediate: true
     }
   },
   methods: {
     setMessage (payload) {
       this.message = payload
-      this.accuracy++
+      this.accuracyFlag = true
+      // this.accuracy++
     },
     insertMessage () {
+      if (this.accuracyFlag) {
+        this.accuracy++
+        this.accuracyFlag = false
+      }
       if (this.message !== '') {
         let time = new Date()
         this.sentMessagesArray.push({
@@ -167,6 +181,15 @@ export default {
           console.log(`Error adding message to ${this.room.name}: ${err}`)
         })
 
+      if (this.endChat) {
+        this.endChat = false
+        this.currUser
+          .sendSimpleMessage({
+            roomId: this.room.id,
+            text: 'b31e3b4a279d8922c52e1c675bbe8872'
+          })
+      }
+
       this.scrollTop()
       this.message = ''
     },
@@ -179,8 +202,17 @@ export default {
         roomId: this.room.id,
         hooks: {
           onMessage: message => {
+            const messageContent = message.parts[0].payload.content
+            if (messageContent === 'b31e3b4a279d8922c52e1c675bbe8872') {
+              this.$notification.open({
+                message: 'Client Left',
+                description: 'Your client is just left!',
+                icon: <a-icon type="info-circle" style="color:#5BC0DE" />
+              })
+              this.sentMessagesArray = []
+            }
             mlHttp
-              .post('/suggestion?query=' + message.parts[0].payload.content)
+              .post('/suggestion?query=' + messageContent)
               .then(res => {
                 console.log(res)
                 this.firstAns = res.data.suggestions[0]
@@ -193,7 +225,7 @@ export default {
               this.sentMessagesArray.push({
                 id: message.id,
                 type: 'received',
-                message: message.parts[0].payload.content,
+                message: messageContent,
                 time: `${
                   time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
                 }:${

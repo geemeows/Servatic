@@ -40,7 +40,7 @@
         <a-row>
           <!-- Start open ticket for the client complaint section -->
           <a-col :span="24">
-            <client-ticket :roomInfo="roomInfo"></client-ticket>
+            <client-ticket :roomInfo="roomInfo" @submitTicket="submitFlag"></client-ticket>
           </a-col>
           <!-- End open ticket for the client complaint section -->
         </a-row>
@@ -49,7 +49,7 @@
 
       <!-- Start Agent Chat Section -->
       <a-col :span="14">
-        <chat-window @roomData="setRoomData"></chat-window>
+        <chat-window @roomData="setRoomData" :submitTicketFlag="submitTicket"></chat-window>
       </a-col>
       <!-- Start Agent Chat Section -->
     </a-row>
@@ -83,15 +83,19 @@ export default {
     return {
       clientsInQueue: 0,
       roomInfo: '',
-      showTickets: false
+      showTickets: false,
+      submitTicket: false
     }
   },
   methods: {
     setRoomData (payload) {
       this.roomInfo = payload
     },
-    hideModal(payload) {
+    hideModal (payload) {
       this.showTickets = payload
+    },
+    submitFlag (payload) {
+      this.submitFlag = true
     }
   }
 }

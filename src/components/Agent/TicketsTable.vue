@@ -49,93 +49,93 @@
 <script>
 import { getTickets } from '../../../core/Agent/agent.services'
 export default {
-  created() {
-      getTickets()
-        .then(res => {
-            this.data = res
-        })
+  created () {
+    getTickets()
+      .then(res => {
+        this.data = res
+      })
   },
-  data() {
+  data () {
     return {
       data: [],
-      searchText: "",
+      searchText: '',
       searchInput: null,
       columns: [
         {
-          title: "Client Name",
-          dataIndex: "client",
-          width: "20%",
-          key: "client",
+          title: 'Client Name',
+          dataIndex: 'client',
+          width: '20%',
+          key: 'client',
           scopedSlots: {
-            filterDropdown: "filterDropdown",
-            filterIcon: "filterIcon",
-            customRender: "customRender"
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'customRender'
           },
           onFilter: (value, record) =>
             record.client.toLowerCase().includes(value.toLowerCase()),
           onFilterDropdownVisibleChange: visible => {
             if (visible) {
               setTimeout(() => {
-                this.searchInput.focus();
-              }, 0);
+                this.searchInput.focus()
+              }, 0)
             }
           }
         },
         {
-          title: "Complaint",
-          dataIndex: "complaint",
-          width: "40%",
-          key: "complaint",
+          title: 'Complaint',
+          dataIndex: 'complaint',
+          width: '40%',
+          key: 'complaint',
           scopedSlots: {
-            filterDropdown: "filterDropdown",
-            filterIcon: "filterIcon",
-            customRender: "customRender"
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'customRender'
           },
           onFilter: (value, record) =>
             record.complaint.toLowerCase().includes(value.toLowerCase()),
           onFilterDropdownVisibleChange: visible => {
             if (visible) {
               setTimeout(() => {
-                this.searchInput.focus();
-              });
+                this.searchInput.focus()
+              })
             }
           }
         },
         {
-          title: "Action",
-          dataIndex: "action",
-          width: "40%",
-          key: "action",
+          title: 'Action',
+          dataIndex: 'action',
+          width: '40%',
+          key: 'action',
           scopedSlots: {
-            filterDropdown: "filterDropdown",
-            filterIcon: "filterIcon",
-            customRender: "customRender"
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'customRender'
           },
           onFilter: (value, record) =>
             record.action.toLowerCase().includes(value.toLowerCase()),
           onFilterDropdownVisibleChange: visible => {
             if (visible) {
               setTimeout(() => {
-                this.searchInput.focus();
-              });
+                this.searchInput.focus()
+              })
             }
           }
         }
       ]
-    };
+    }
   },
   methods: {
-    handleSearch(selectedKeys, confirm) {
-      confirm();
-      this.searchText = selectedKeys[0];
+    handleSearch (selectedKeys, confirm) {
+      confirm()
+      this.searchText = selectedKeys[0]
     },
 
-    handleReset(clearFilters) {
-      clearFilters();
-      this.searchText = "";
+    handleReset (clearFilters) {
+      clearFilters()
+      this.searchText = ''
     }
   }
-};
+}
 </script>
 
 <style>
