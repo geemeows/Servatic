@@ -8,7 +8,15 @@
             <div v-for="message in sentMessagesArray" :key="message.id">
               <div :class="message.type">
                 <div class="content">{{message.message}}</div>
-                <div class="time"><a-icon style="color: #00c610;" v-if="message.type==='sent'" type="check" /><a-icon style="margin-left:-8px; color: #00c610;" v-if="message.type==='sent'" type="check" />{{message.time}}</div>
+                <div class="time">
+                  <a-icon style="color: #00c610;" v-if="message.type==='sent'" type="check" />
+                  <a-icon
+                    style="margin-left:-8px; color: #00c610;"
+                    v-if="message.type==='sent'"
+                    type="check"
+                  />
+                  {{message.time}}
+                </div>
               </div>
               <div class="clearfix"></div>
             </div>
@@ -128,20 +136,28 @@ export default {
       startChat: true,
       accuracy: 0,
       accuracyFlag: false,
-      endChat: false
+      endChat: null
     }
   },
   watch: {
-    'accuracy': {
+    accuracy: {
       handler (payload) {
         // Do Accuracy
         this.calcAccuracy(payload)
       },
       immediate: true
     },
-    'submitTicketFlag': {
+    submitTicketFlag: {
       handler (payload) {
         this.endChat = payload
+        this.sentMessagesArray = []
+        this.endChat = false
+        if (this.currUser) {
+          this.currUser.sendSimpleMessage({
+            roomId: this.room.id,
+            text: 'b31e3b4a279d8922c52e1c675bbe8872'
+          })
+        }
       },
       immediate: true
     }
@@ -181,15 +197,6 @@ export default {
           console.log(`Error adding message to ${this.room.name}: ${err}`)
         })
 
-      if (this.endChat) {
-        this.endChat = false
-        this.currUser
-          .sendSimpleMessage({
-            roomId: this.room.id,
-            text: 'b31e3b4a279d8922c52e1c675bbe8872'
-          })
-      }
-
       this.scrollTop()
       this.message = ''
     },
@@ -204,12 +211,15 @@ export default {
           onMessage: message => {
             const messageContent = message.parts[0].payload.content
             if (messageContent === 'b31e3b4a279d8922c52e1c675bbe8872') {
-              this.$notification.open({
-                message: 'Client Left',
-                description: 'Your client is just left!',
-                icon: <a-icon type="info-circle" style="color:#5BC0DE" />
-              })
+              if (message.senderId !== this.currUser.id) {
+                this.$notification.open({
+                  message: 'Client Left',
+                  description: 'Your client is just left!',
+                  icon: <a-icon type="info-circle" style="color:#5BC0DE" />
+                })
+              }
               this.sentMessagesArray = []
+              return
             }
             mlHttp
               .post('/suggestion?query=' + messageContent)
@@ -263,7 +273,9 @@ export default {
     calcAccuracy (payload) {
       let sum = 0
       let receivedMsgs = []
-      receivedMsgs = this.sentMessagesArray.filter(item => item.type === 'sent')
+      receivedMsgs = this.sentMessagesArray.filter(
+        item => item.type === 'sent'
+      )
       console.log(receivedMsgs)
       sum = payload / (receivedMsgs.length + 1)
       Cookies.set('accuracy', sum)
@@ -350,7 +362,9 @@ export default {
 .suggestions {
   padding-top: 5px;
 }
-.suggestions .first, .suggestions .second, .suggestions .third{
+.suggestions .first,
+.suggestions .second,
+.suggestions .third {
   padding: 2px 10px;
   /* float: left;
   width: 181px; */
@@ -364,7 +378,9 @@ export default {
   word-wrap: break-word;
   height: 100%;
 }
-.suggestions .first:hover, .suggestions .second:hover, .suggestions .third:hover {
+.suggestions .first:hover,
+.suggestions .second:hover,
+.suggestions .third:hover {
   background: #40a9ff;
   cursor: pointer !important;
   color: white;

@@ -59,7 +59,7 @@
 <script>
 import clientTicket from '../../components/Agent/Ticket'
 import { getQueue } from '../../../core/Agent/agent.services'
-import { setInterval } from 'timers'
+import { setInterval, setTimeout } from 'timers'
 import TicketsTable from '../../components/Agent/TicketsTable'
 const chatWindow = () => import('../../components/Chat/Chat')
 export default {
@@ -95,7 +95,10 @@ export default {
       this.showTickets = payload
     },
     submitFlag (payload) {
-      this.submitFlag = true
+      this.submitTicket = payload
+      setTimeout(() => {
+        this.submitTicket = false
+      }, 1000)
     }
   }
 }
