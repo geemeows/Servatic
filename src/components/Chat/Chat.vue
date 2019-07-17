@@ -276,8 +276,7 @@ export default {
       receivedMsgs = this.sentMessagesArray.filter(
         item => item.type === 'sent'
       )
-      console.log(receivedMsgs)
-      sum = payload / (receivedMsgs.length + 1)
+      sum = payload / (receivedMsgs.length)
       Cookies.set('accuracy', sum)
     }
   }
