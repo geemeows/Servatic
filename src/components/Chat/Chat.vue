@@ -98,7 +98,7 @@ export default {
             description: 'New Client added to the chatting area',
             icon: <a-icon type="plus" style="color:#00c610" />
           })
-          this.getRoominfo(this.room.id)
+          // this.getRoominfo(this.room.id)
 
           // Setting Cookies
           Cookies.set('accuracy', 0)
@@ -251,25 +251,25 @@ export default {
         messageLimit: 0
       })
     },
-    getRoominfo (id) {
-      getRoomData(id)
-        .then(res => {
-          console.log(res)
-          this.$emit('roomData', {
-            ticketID: res.data.ticket.id,
-            createdAt: res.data.ticket.created_at,
-            clientName: res.data.client.name,
-            clientEmail: res.data.client.email
-          })
-        })
-        .catch(err => {
-          this.$notification.open({
-            message: 'Somthing Went Wrong',
-            description: `${err.message}`,
-            icon: <a-icon type="close" style="color:#c10000" />
-          })
-        })
-    },
+    // getRoominfo (id) {
+    //   getRoomData(id)
+    //     .then(res => {
+    //       console.log(res)
+    //       this.$emit('roomData', {
+    //         ticketID: res.data.ticket.id,
+    //         createdAt: res.data.ticket.created_at,
+    //         clientName: res.data.client.name,
+    //         clientEmail: res.data.client.email
+    //       })
+    //     })
+    //     .catch(err => {
+    //       this.$notification.open({
+    //         message: 'Somthing Went Wrong',
+    //         description: `${err.message}`,
+    //         icon: <a-icon type="close" style="color:#c10000" />
+    //       })
+    //     })
+    // },
     calcAccuracy (payload) {
       let sum = 0
       let receivedMsgs = []

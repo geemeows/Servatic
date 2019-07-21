@@ -21,21 +21,3 @@ export const getRoomData = (id) => {
       }
     })
 }
-
-// export const addToRoom = chatManager => {
-//   chatManager
-//     .connect({
-//       onAddedToRoom: room => {
-//         this.room = room
-//         this.listen()
-//         console.log(`Added to room ${room.name}`)
-//       }
-//     })
-//     .then(currentUser => {
-//       this.currUser = currentUser
-//       console.log('Successful connection', currentUser)
-//     })
-//     .catch(err => {
-//       console.log('Error on connection', err)
-//     })
-// }

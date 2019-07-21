@@ -17,10 +17,20 @@
             />
           </a-col>
           <a-col :span="4">
-            <a-button style="margin-bottom: 15px;" type="primary" block>
+            <a-button
+              @click="fetchNewClient"
+              :loading="fetchLoading"
+              style="margin-bottom: 15px;"
+              type="primary"
+              block
+            >
               <a-icon type="redo" />&nbsp;Fetch Client
             </a-button>
-            <a-button @click="() => showTickets = true" style="background:#001529; color: #fff" block>
+            <a-button
+              @click="() => showTickets = true"
+              style="background:#001529; color: #fff"
+              block
+            >
               <a-icon type="file-done" />&nbsp;Closed Tickets
             </a-button>
             <a-modal
@@ -28,10 +38,10 @@
               style="top: 20px;"
               :visible="showTickets"
               :footer="false"
-              :width = "900"
+              :width="900"
               @cancel="() => hideModal(false)"
             >
-            <tickets-table></tickets-table>
+              <tickets-table></tickets-table>
             </a-modal>
           </a-col>
         </a-row>
@@ -49,7 +59,7 @@
 
       <!-- Start Agent Chat Section -->
       <a-col :span="14">
-        <chat-window @roomData="setRoomData" :submitTicketFlag="submitTicket"></chat-window>
+        <chat-window :submitTicketFlag="submitTicket"></chat-window>
       </a-col>
       <!-- Start Agent Chat Section -->
     </a-row>
@@ -57,51 +67,72 @@
 </template>
 
 <script>
-import clientTicket from '../../components/Agent/Ticket'
-import { getQueue } from '../../../core/Agent/agent.services'
-import { setInterval, setTimeout } from 'timers'
-import TicketsTable from '../../components/Agent/TicketsTable'
-const chatWindow = () => import('../../components/Chat/Chat')
+import clientTicket from "../../components/Agent/Ticket";
+import { getQueue, fetchClient } from "../../../core/Agent/agent.services";
+import { setInterval, setTimeout } from "timers";
+import TicketsTable from "../../components/Agent/TicketsTable";
+const chatWindow = () => import("../../components/Chat/Chat");
 export default {
   components: {
     clientTicket,
     chatWindow,
     TicketsTable
   },
-  created () {
+  created() {
     getQueue().then(res => {
-      this.clientsInQueue = res.data[0].client_in_queue
-    })
+      this.clientsInQueue = res.data.count;
+    });
 
     setInterval(() => {
       getQueue().then(res => {
-        this.clientsInQueue = res.data[0].client_in_queue
-      })
-    }, 30 * 1000)
+        this.clientsInQueue = res.data.count;
+      });
+    }, 30 * 1000);
   },
-  data () {
+  data() {
     return {
       clientsInQueue: 0,
-      roomInfo: '',
+      roomInfo: "",
       showTickets: false,
-      submitTicket: false
-    }
+      submitTicket: false,
+      fetchLoading: false
+    };
   },
   methods: {
-    setRoomData (payload) {
-      this.roomInfo = payload
+    hideModal(payload) {
+      this.showTickets = payload;
     },
-    hideModal (payload) {
-      this.showTickets = payload
-    },
-    submitFlag (payload) {
-      this.submitTicket = payload
+    submitFlag(payload) {
+      this.submitTicket = payload;
       setTimeout(() => {
-        this.submitTicket = false
-      }, 1000)
+        this.submitTicket = false;
+      }, 1000);
+    },
+    fetchNewClient() {
+      this.fetchLoading = true;
+      fetchClient()
+        .then(res => {
+          this.fetchLoading = false;
+          this.roomInfo = {
+            ticketID: res.data.ticket.id,
+            createdAt: res.data.ticket.created_at,
+            clientName: res.data.client.name,
+            clientEmail: res.data.client.email
+          };
+        })
+        .catch(err => {
+          if (err.response.status == 404) {
+            this.fetchLoading = false;
+            this.$notification.open({
+              message: "Fetch Client",
+              description: "No clients in queue to fetch!",
+              icon: <a-icon type="info-circle" style="color:#5BC0DE" />
+            });
+          }
+        });
     }
   }
-}
+};
 </script>
 
 <style>
