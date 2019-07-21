@@ -1,5 +1,5 @@
 <template>
-  <a-table :dataSource="data" :columns="columns">
+  <a-table :dataSource="data" :columns="columns" :loading="isLoading">
     <div
       slot="filterDropdown"
       slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -50,13 +50,16 @@
 import { getTickets } from '../../../core/Agent/agent.services'
 export default {
   created () {
+    this.isLoading = true
     getTickets()
       .then(res => {
+        this.isLoading = false
         this.data = res
       })
   },
   data () {
     return {
+      isLoading: false,
       data: [],
       searchText: '',
       searchInput: null,

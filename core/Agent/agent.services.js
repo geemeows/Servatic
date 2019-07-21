@@ -21,14 +21,14 @@ export const updateTicket = (payload) => {
 export const getTickets = () => {
   const companyID = Cookies.get('companyID')
   const token = Cookies.get('token')
-  return serverHttp.get(`/tickets/${companyID}/`, {
+  return serverHttp.get(`/tickets/company/${companyID}`, {
     params: {
       token
     }
   })
     .then(res => {
       const tickets = res.data
-      formatTickets(tickets)
+      return formatTickets(tickets)
     })
 }
 

@@ -11,13 +11,3 @@ export const initChatManager = new ChatManager({
       'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/36b1d33d-9c63-4cb7-a38b-a700704de3a1/token'
   })
 })
-
-export const getRoomData = (id) => {
-  const token = Cookies.get('token')
-  return serverHttp
-    .get(`/roomClient/${id}`, {
-      params: {
-        token
-      }
-    })
-}

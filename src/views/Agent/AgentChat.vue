@@ -23,6 +23,7 @@
               style="margin-bottom: 15px;"
               type="primary"
               block
+              :disabled="roomInfo !== ''"
             >
               <a-icon type="redo" />&nbsp;Fetch Client
             </a-button>
@@ -67,72 +68,73 @@
 </template>
 
 <script>
-import clientTicket from "../../components/Agent/Ticket";
-import { getQueue, fetchClient } from "../../../core/Agent/agent.services";
-import { setInterval, setTimeout } from "timers";
-import TicketsTable from "../../components/Agent/TicketsTable";
-const chatWindow = () => import("../../components/Chat/Chat");
+import clientTicket from '../../components/Agent/Ticket'
+import { getQueue, fetchClient } from '../../../core/Agent/agent.services'
+import { setInterval, setTimeout } from 'timers'
+import TicketsTable from '../../components/Agent/TicketsTable'
+const chatWindow = () => import('../../components/Chat/Chat')
 export default {
   components: {
     clientTicket,
     chatWindow,
     TicketsTable
   },
-  created() {
+  created () {
     getQueue().then(res => {
-      this.clientsInQueue = res.data.count;
-    });
+      this.clientsInQueue = res.data.count
+    })
 
     setInterval(() => {
       getQueue().then(res => {
-        this.clientsInQueue = res.data.count;
-      });
-    }, 30 * 1000);
+        this.clientsInQueue = res.data.count
+      })
+    }, 10 * 1000)
   },
-  data() {
+  data () {
     return {
       clientsInQueue: 0,
-      roomInfo: "",
+      roomInfo: '',
       showTickets: false,
       submitTicket: false,
       fetchLoading: false
-    };
+    }
   },
   methods: {
-    hideModal(payload) {
-      this.showTickets = payload;
+    hideModal (payload) {
+      this.showTickets = payload
     },
-    submitFlag(payload) {
-      this.submitTicket = payload;
+    submitFlag (payload) {
+      this.submitTicket = payload
       setTimeout(() => {
-        this.submitTicket = false;
-      }, 1000);
+        this.submitTicket = false
+        this.roomInfo = ''
+      }, 1000)
     },
-    fetchNewClient() {
-      this.fetchLoading = true;
+    fetchNewClient () {
+      this.fetchLoading = true
       fetchClient()
         .then(res => {
-          this.fetchLoading = false;
+          this.fetchLoading = false
           this.roomInfo = {
             ticketID: res.data.ticket.id,
             createdAt: res.data.ticket.created_at,
             clientName: res.data.client.name,
             clientEmail: res.data.client.email
-          };
+          }
         })
         .catch(err => {
           if (err.response.status == 404) {
-            this.fetchLoading = false;
+            this.fetchLoading = false
             this.$notification.open({
-              message: "Fetch Client",
-              description: "No clients in queue to fetch!",
+              message: 'Fetch Client',
+              description: 'No clients in queue to fetch!',
               icon: <a-icon type="info-circle" style="color:#5BC0DE" />
-            });
+            })
           }
-        });
+        })
     }
   }
-};
+}
 </script>
 
 <style>
