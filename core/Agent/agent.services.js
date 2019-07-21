@@ -18,21 +18,40 @@ export const updateTicket = (payload) => {
     })
 }
 
-export const getQueue = () => {
-  const companyID = Cookies.get('companyID')
-  return serverHttp.get(`/companies/${companyID}`)
-}
-
 export const getTickets = () => {
   const companyID = Cookies.get('companyID')
   const token = Cookies.get('token')
-  return serverHttp.get(`/tickets/${companyID}/`, {
+  return serverHttp.get(`/tickets/company/${companyID}`, {
     params: {
       token
     }
   })
     .then(res => {
       const tickets = res.data
-      formatTickets(tickets)
+      return formatTickets(tickets)
     })
+}
+
+export const fetchClient = () => {
+  const userID = Cookies.get('userID')
+  const companyID = Cookies.get('companyID')
+  const token = Cookies.get('token')
+
+  return serverHttp.post('/fetchClient', {
+    company_id: companyID,
+    agent_id: userID,
+    startChatTime: new Date(),
+    token
+  })
+}
+
+export const getQueue = () => {
+  const companyID = Cookies.get('companyID')
+  const token = Cookies.get('token')
+
+  return serverHttp.get(`/numberInQueue/${companyID}`, {
+    params: {
+      token
+    }
+  })
 }

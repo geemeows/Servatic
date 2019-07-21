@@ -25,6 +25,7 @@
         <scrolly-bar axis="y"></scrolly-bar>
       </scrolly>
     </div>
+    <span class="is-typing">{{isTypingIndicator}}</span>
     <div class="chat-toolbox">
       <div class="suggestions">
         <a-collapse defaultActiveKey="0" :bordered="false">
@@ -45,6 +46,7 @@
                 v-model="message"
                 @keydown.enter.exact.prevent
                 @keyup.enter.exact="insertMessage"
+                @change="startedTyping"
                 :disabled="startChat"
               >
                 <a-icon slot="prefix" type="message" style="color: rgba(0,0,0,.25)" />
@@ -72,7 +74,7 @@
 <script>
 import { Scrolly, ScrollyViewport, ScrollyBar } from 'vue-scrolly'
 import { mlHttp } from '../../../core/httpClient'
-import { initChatManager, getRoomData } from '../../../core/Chat/chat.services'
+import { initChatManager } from '../../../core/Chat/chat.services'
 import Cookies from 'vue-cookies'
 
 export default {
@@ -93,12 +95,12 @@ export default {
           this.listen()
           this.startChat = false
           console.log('Room ID', this.room.id, this.room)
+
           this.$notification.open({
             message: 'New Client',
             description: 'New Client added to the chatting area',
             icon: <a-icon type="plus" style="color:#00c610" />
           })
-          this.getRoominfo(this.room.id)
 
           // Setting Cookies
           Cookies.set('accuracy', 0)
@@ -136,7 +138,8 @@ export default {
       startChat: true,
       accuracy: 0,
       accuracyFlag: false,
-      endChat: null
+      endChat: null,
+      isTypingIndicator: ''
     }
   },
   watch: {
@@ -246,29 +249,16 @@ export default {
               })
             }
             console.log('received message', message)
+          },
+          onUserStartedTyping: user => {
+            this.isTypingIndicator = `${user.name} is typing...`
+          },
+          onUserStoppedTyping: user => {
+            this.isTypingIndicator = ''
           }
         },
         messageLimit: 0
       })
-    },
-    getRoominfo (id) {
-      getRoomData(id)
-        .then(res => {
-          console.log(res)
-          this.$emit('roomData', {
-            ticketID: res.data.ticket.id,
-            createdAt: res.data.ticket.created_at,
-            clientName: res.data.client.name,
-            clientEmail: res.data.client.email
-          })
-        })
-        .catch(err => {
-          this.$notification.open({
-            message: 'Somthing Went Wrong',
-            description: `${err.message}`,
-            icon: <a-icon type="close" style="color:#c10000" />
-          })
-        })
     },
     calcAccuracy (payload) {
       let sum = 0
@@ -278,12 +268,21 @@ export default {
       )
       sum = payload / (receivedMsgs.length)
       Cookies.set('accuracy', sum)
+    },
+    startedTyping () {
+      this.currUser.isTypingIn({ roomId: this.room.id })
+
     }
   }
 }
 </script>
 
 <style scoped>
+.is-typing {
+  color: #999;
+  font-size: 12px;
+  font-style: italic
+}
 .ant-card {
   background: #fff;
   box-shadow: 0 2px 5px rgba(0, 21, 41, 0.13);

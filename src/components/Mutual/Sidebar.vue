@@ -11,7 +11,7 @@
         </router-link>
       </a-menu-item>
 
-      <a-menu-item key="2" v-if="getAccountType !== 'admin'">
+      <a-menu-item key="2" v-if="getAccountType === 'moderator'">
         <router-link to="/closed-tickets">
           <a-icon type="file-done"/>
           <span>Closed Tickets</span>

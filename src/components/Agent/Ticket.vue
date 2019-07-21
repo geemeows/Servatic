@@ -40,23 +40,15 @@
         />
       </a-form-item>
       <a-form-item>
-        <a-popconfirm
-          placement="rightBottom"
-          title="Chat with another client?"
-          @confirm="confirm"
-          @cancel="cancel"
-          okText="Yes"
-          cancelText="No"
-        >
           <a-button
             type="primary"
             html-type="submit"
+            @click="submitComplaint"
             class="login-form-button"
             block
             :disabled="roomInfo === ''"
             :loading="isLoading"
           >Submit Complaint</a-button>
-        </a-popconfirm>
       </a-form-item>
     </a-form>
   </a-card>
