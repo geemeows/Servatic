@@ -16,29 +16,7 @@
               <a-col :span="14">
                 <div class="card-info">
                   <span class="title">Avg. Waiting Time (min)</span>
-                  <span class="value">23</span>
-                </div>
-              </a-col>
-            </a-row>
-          </a-layout-content>
-        </div>
-      </a-col>
-      <a-col :span="8">
-        <div class="card">
-          <a-layout-content
-            :style="{background: '#fff', boxShadow: '0 2px 5px rgba(0,21,41,.13)',
-            borderRadius: '10px 10px 10px 10px', height: '130px'}"
-          >
-            <a-row>
-              <a-col :span="10">
-                <div class="card-icon">
-                  <a-icon type="team" />
-                </div>
-              </a-col>
-              <a-col :span="14">
-                <div class="card-info">
-                  <span class="title">#Clients in Queue</span>
-                  <span class="value">67</span>
+                  <span class="value">{{companyStats.avgWaitingTime}}</span>
                 </div>
               </a-col>
             </a-row>
@@ -59,8 +37,30 @@
               </a-col>
               <a-col :span="14">
                 <div class="card-info">
-                  <span class="title">Avg. Response Time (min)</span>
-                  <span class="value">22</span>
+                  <span class="title">Avg. Respose Time (min)</span>
+                  <span class="value">{{ companyStats.avgResTime }}</span>
+                </div>
+              </a-col>
+            </a-row>
+          </a-layout-content>
+        </div>
+      </a-col>
+      <a-col :span="8">
+        <div class="card">
+          <a-layout-content
+            :style="{background: '#fff', boxShadow: '0 2px 5px rgba(0,21,41,.13)',
+            borderRadius: '10px 10px 10px 10px', height: '130px'}"
+          >
+            <a-row>
+              <a-col :span="10">
+                <div class="card-icon">
+                  <a-icon type="radar-chart" />
+                </div>
+              </a-col>
+              <a-col :span="14">
+                <div class="card-info">
+                  <span class="title">Avg. Accuracy</span>
+                  <span class="value">{{ companyStats.avgAccuracy }}</span>
                 </div>
               </a-col>
             </a-row>
@@ -70,6 +70,11 @@
     </a-row>
   </a-layout>
 </template>
+<script>
+export default {
+  props: ['companyStats']
+}
+</script>
 <style scoped>
 
 .card {

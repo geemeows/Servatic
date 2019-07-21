@@ -1,5 +1,6 @@
 import { serverHttp } from '../httpClient'
 import Cookies from 'vue-cookies'
+import { formatRes } from './moderator.model'
 
 export const addAgent = (payload) => {
   const token = Cookies.get('token')
@@ -30,4 +31,17 @@ export const deleteAgent = (id) => {
       token
     }
   })
+}
+
+export const getStats = () => {
+  const companyID = Cookies.get('companyID')
+  const token = Cookies.get('token')
+  return serverHttp.get(`/stats/${companyID}`, {
+    params: {
+      token
+    }
+  })
+    .then(res => {
+      return formatRes(res.data)
+    })
 }
