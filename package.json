@@ -10,7 +10,7 @@
   "dependencies": {
     "@pusher/chatkit-client": "^1.9.0",
     "ant-design-vue": "^1.3.10",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "vue": "^2.6.10",
     "vue-cookies": "^1.5.13",
     "vue-nice-scrollbar": "^2.0.1",
